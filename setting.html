@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Quản lý người dùng, cây trồng và level</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/setting.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Quản lý Trang Settings</h2>
+        
+        <!-- Quản lý Người Dùng -->
+        <section>
+            <h3>Quản lý Người Dùng</h3>
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dữ liệu người dùng sẽ được hiển thị tại đây -->
+                </tbody>
+            </table>
+            <button id="addUserBtn">Thêm Người Dùng</button>
+        </section>
+
+        <!-- Quản lý Cây Trồng -->
+        <section>
+            <h3>Quản lý Cây Trồng</h3>
+            <table id="plantsTable">
+                <thead>
+                    <tr>
+                        <th>Tên Cây</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dữ liệu cây trồng sẽ được hiển thị tại đây -->
+                </tbody>
+            </table>
+            <button id="addPlantBtn">Thêm Cây Trồng</button>
+        </section>
+
+        <!-- Quản lý Cấp Độ -->
+        <section>
+            <h3>Quản lý Cấp Độ</h3>
+            <table id="levelsTable">
+                <thead>
+                    <tr>
+                        <th>Cấp Độ</th>
+                        <th>Kinh Nghiệm Yêu Cầu</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dữ liệu cấp độ sẽ được hiển thị tại đây -->
+                </tbody>
+            </table>
+            <button id="addLevelBtn">Thêm Cấp Độ</button>
+        </section>
+    </div>
+
+    <script src="js/settings.js"></script>
+</body>
+</html>
