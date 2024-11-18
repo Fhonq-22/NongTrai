@@ -1,8 +1,6 @@
-// Import đối tượng database từ firebase-config.js
 import { database } from "./firebase-config.js";
-import { ref, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import { ref, set, get } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
-// Lắng nghe sự kiện form submit để đăng ký người dùng
 document.getElementById('registerForm').addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -14,18 +12,31 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
         return;
     }
 
-    // Thêm người dùng mới vào Firebase Realtime Database
-    set(ref(database, 'Users/' + username), {
-        password: password // Lưu mật khẩu (nên mã hóa trước khi lưu vào DB)
-    })
-    .then(() => {
-        alert('Đăng ký thành công!');
-        
-        // Chuyển hướng đến trang đăng nhập (login.html)
-        window.location.href = "login.html";
-    })
-    .catch((error) => {
-        alert(`Có lỗi xảy ra: ${error.message}`);
+    // Kiểm tra xem tên người dùng đã tồn tại chưa
+    const userRef = ref(database, 'Users/' + username);
+
+    get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            // Nếu tên người dùng đã tồn tại, thông báo lỗi
+            alert('Tên người dùng đã tồn tại!');
+        } else {
+            // Nếu tên người dùng chưa tồn tại, thêm người dùng vào Firebase
+            set(ref(database, 'Users/' + username), {
+                password: password // Lưu mật khẩu (nên mã hóa trước khi lưu vào DB)
+            })
+            .then(() => {
+                alert('Đăng ký thành công!');
+                
+                // Chuyển hướng đến trang đăng nhập (login.html)
+                window.location.href = "login.html";
+            })
+            .catch((error) => {
+                alert(`Có lỗi xảy ra: ${error.message}`);
+                console.error(error);
+            });
+        }
+    }).catch((error) => {
+        alert(`Có lỗi xảy ra khi kiểm tra tên người dùng: ${error.message}`);
         console.error(error);
     });
 });

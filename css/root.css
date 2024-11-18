@@ -1,0 +1,32 @@
+/* root.css - Các biến màu sắc và cài đặt cơ bản */
+:root {
+    --primary-color: #89CFF0; /* Màu xanh nhạt pastel */
+    --secondary-color: #FFB6C1; /* Màu hồng nhạt pastel */
+    --accent-color: #FFE4B5; /* Màu vàng nhạt pastel */
+    --background-color: #F0F8FF; /* Màu nền nhẹ nhàng */
+    --text-color: #4B0082; /* Màu tím pastel */
+    --button-bg-color: #98FB98; /* Màu xanh lá cây nhạt cho button */
+    --button-hover-bg-color: #32CD32; /* Màu xanh lá cây đậm hơn khi hover */
+    --input-bg-color: #FFFFFF; /* Màu nền trắng cho các input */
+    --input-border-color: #D3D3D3; /* Màu viền input */
+    --input-focus-border-color: #90EE90; /* Màu viền khi input được focus */
+}
+
+/* Định nghĩa font chữ toàn trang */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h2 {
+    color: var(--primary-color);
+    font-size: 2em;
+    text-align: center;
+}

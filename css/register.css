@@ -1,0 +1,52 @@
+/* register.css - Định kiểu cho trang đăng ký */
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg-color);
+    font-size: 1em;
+}
+
+input:focus {
+    border-color: var(--input-focus-border-color);
+    outline: none;
+}
+
+button {
+    padding: 12px;
+    background-color: var(--button-bg-color);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+button:active {
+    background-color: #2E8B57;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 90%;
+    }
+}
