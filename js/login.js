@@ -2,10 +2,10 @@
 import { database } from "./firebase-config.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
-// Lắng nghe sự kiện form submit để đăng nhập người dùng
+// Lắng nghe sự kiện form submit để đăng nhập
 document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
@@ -14,21 +14,16 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         return;
     }
 
-    // Kiểm tra thông tin đăng nhập từ Firebase Realtime Database
-    const userRef = ref(database, 'Users/' + username);
-
-    get(userRef).then((snapshot) => {
-        if (snapshot.exists()) {
-            const userData = snapshot.val();
-            if (userData.password === password) {
-                alert('Đăng nhập thành công!');
-                // Chuyển hướng đến trang chính (hoặc dashboard)
-                window.location.href = "dashboard.html";  // Thay đổi URL trang bạn muốn chuyển đến
-            } else {
-                alert('Mật khẩu không đúng!');
-            }
+    // Kiểm tra người dùng từ Firebase Realtime Database
+    get(ref(database, 'Users/' + username)).then((snapshot) => {
+        if (snapshot.exists() && snapshot.val().password === password) {
+            // Lưu trạng thái đăng nhập vào localStorage
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // Chuyển hướng đến Dashboard
+            window.location.href = "dashboard.html";
         } else {
-            alert('Tên người dùng không tồn tại!');
+            alert('Tên người dùng hoặc mật khẩu không đúng!');
         }
     }).catch((error) => {
         alert(`Có lỗi xảy ra: ${error.message}`);
