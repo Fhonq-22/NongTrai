@@ -21,13 +21,11 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         if (snapshot.exists() && snapshot.val().password === password) {
             console.log("Tên người dùng hợp lệ");
 
-            // Nếu người dùng là Admin, chuyển đến trang settings
+            // Nếu người dùng là Admin, chuyển đến trang setting
             if (username === "Admin") {
-                console.log("Chuyển đến settings.html");
                 window.location.href = "settings.html";
             } else {
                 // Nếu không phải Admin, chuyển đến Dashboard
-                console.log("Chuyển đến dashboard.html");
                 window.location.href = "dashboard.html";
             }
 
