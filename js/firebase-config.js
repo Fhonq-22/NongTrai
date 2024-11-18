@@ -1,8 +1,8 @@
 // firebase-config.js
 
-// Import các chức năng cần thiết từ Firebase SDK
+// Import các chức năng từ Firebase SDK qua CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"; // Đúng đường dẫn để lấy Realtime Database
 
 // Cấu hình Firebase của bạn
 const firebaseConfig = {
