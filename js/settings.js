@@ -37,7 +37,11 @@ function displayPlants() {
             Object.keys(plants).forEach((plantId) => {
                 const row = plantsTableBody.insertRow();
                 row.insertCell(0).innerText = plants[plantId].name;
-                const actionsCell = row.insertCell(1);
+                row.insertCell(1).innerText = plants[plantId].growthTime;
+                row.insertCell(2).innerText = plants[plantId].expReward;
+                row.insertCell(3).innerText = plants[plantId].coinsReward;
+                row.insertCell(4).innerText = plants[plantId].seedCost;
+                const actionsCell = row.insertCell(5);
                 actionsCell.innerHTML = `<button onclick="deletePlant('${plantId}')">Xóa</button>`;
             });
         }
@@ -54,12 +58,14 @@ function displayLevels() {
 
         if (snapshot.exists()) {
             const levels = snapshot.val();
-            Object.keys(levels).forEach((levelId) => {
+            Object.keys(levels).forEach((level) => {
                 const row = levelsTableBody.insertRow();
-                row.insertCell(0).innerText = levels[levelId].level;
-                row.insertCell(1).innerText = levels[levelId].xpRequired;
-                const actionsCell = row.insertCell(2);
-                actionsCell.innerHTML = `<button onclick="deleteLevel('${levelId}')">Xóa</button>`;
+                row.insertCell(0).innerText = level;
+                row.insertCell(1).innerText = levels[level].plotsUnlocked;
+                row.insertCell(2).innerText = levels[level].xpRequired;
+                row.insertCell(3).innerText = levels[level].coinsReward;
+                const actionsCell = row.insertCell(4);
+                actionsCell.innerHTML = `<button onclick="deleteLevel('${level}')">Xóa</button>`;
             });
         }
     }).catch((error) => {
@@ -67,46 +73,40 @@ function displayLevels() {
     });
 }
 
-// Xóa người dùng
-function deleteUser(username) {
-    if (confirm(`Bạn có chắc chắn muốn xóa người dùng ${username}?`)) {
-        remove(ref(database, 'Users/' + username))
-            .then(() => {
-                displayUsers();
-                alert('Đã xóa người dùng!');
-            })
-            .catch((error) => {
-                alert('Có lỗi xảy ra khi xóa người dùng: ' + error.message);
-            });
-    }
+// Hàm xóa người dùng
+function deleteUser(userId) {
+    const userRef = ref(database, 'Users/' + userId); // Lấy tham chiếu đến người dùng cần xóa
+    remove(userRef).then(() => {
+        alert('Người dùng đã bị xóa!');
+        displayUsers(); // Cập nhật lại danh sách người dùng sau khi xóa
+    }).catch((error) => {
+        console.error("Có lỗi khi xóa người dùng: ", error);
+        alert('Có lỗi xảy ra khi xóa người dùng!');
+    });
 }
 
-// Xóa cây trồng
+// Hàm xóa cây trồng
 function deletePlant(plantId) {
-    if (confirm(`Bạn có chắc chắn muốn xóa cây trồng này?`)) {
-        remove(ref(database, 'Plants/' + plantId))
-            .then(() => {
-                displayPlants();
-                alert('Đã xóa cây trồng!');
-            })
-            .catch((error) => {
-                alert('Có lỗi xảy ra khi xóa cây trồng: ' + error.message);
-            });
-    }
+    const plantRef = ref(database, 'Plants/' + plantId); // Lấy tham chiếu đến cây trồng cần xóa
+    remove(plantRef).then(() => {
+        alert('Cây trồng đã bị xóa!');
+        displayPlants(); // Cập nhật lại danh sách cây trồng sau khi xóa
+    }).catch((error) => {
+        console.error("Có lỗi khi xóa cây trồng: ", error);
+        alert('Có lỗi xảy ra khi xóa cây trồng!');
+    });
 }
 
-// Xóa cấp độ
-function deleteLevel(levelId) {
-    if (confirm(`Bạn có chắc chắn muốn xóa cấp độ này?`)) {
-        remove(ref(database, 'Levels/' + levelId))
-            .then(() => {
-                displayLevels();
-                alert('Đã xóa cấp độ!');
-            })
-            .catch((error) => {
-                alert('Có lỗi xảy ra khi xóa cấp độ: ' + error.message);
-            });
-    }
+// Hàm xóa cấp độ
+function deleteLevel(levelName) {
+    const levelRef = ref(database, 'Levels/' + levelName); // Lấy tham chiếu đến cấp độ cần xóa
+    remove(levelRef).then(() => {
+        alert('Cấp độ đã bị xóa!');
+        displayLevels(); // Cập nhật lại danh sách cấp độ sau khi xóa
+    }).catch((error) => {
+        console.error("Có lỗi khi xóa cấp độ: ", error);
+        alert('Có lỗi xảy ra khi xóa cấp độ!');
+    });
 }
 
 // Thêm người dùng
