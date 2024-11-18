@@ -18,7 +18,10 @@ function displayUsers() {
                 const row = usersTableBody.insertRow();
                 row.insertCell(0).innerText = username;
                 const actionsCell = row.insertCell(1);
-                if(username !== "Admin") {
+                if(username === "Admin") {
+                    actionsCell.innerHTML = `<button onclick="editUserPassword('${username}')">Sửa mật khẩu</button>`;
+                }
+                else{
                     actionsCell.innerHTML = `<button onclick="deleteUser('${username}')">Xóa</button>`;
                 }
             });
@@ -44,7 +47,8 @@ function displayPlants() {
                 row.insertCell(3).innerText = plants[plantId].coinsReward;
                 row.insertCell(4).innerText = plants[plantId].seedCost;
                 const actionsCell = row.insertCell(5);
-                actionsCell.innerHTML = `<button onclick="deletePlant('${plantId}')">Xóa</button>`;
+                actionsCell.innerHTML = `<button onclick="deletePlant('${plantId}')">Xóa</button>
+                                         <button onclick="editPlant('${plantId}')">Sửa</button>`;
             });
         }
     }).catch((error) => {
@@ -60,14 +64,15 @@ function displayLevels() {
 
         if (snapshot.exists()) {
             const levels = snapshot.val();
-            Object.keys(levels).forEach((level) => {
+            Object.keys(levels).forEach((levelName) => {
                 const row = levelsTableBody.insertRow();
-                row.insertCell(0).innerText = level;
-                row.insertCell(1).innerText = levels[level].plotsUnlocked;
-                row.insertCell(2).innerText = levels[level].xpRequired;
-                row.insertCell(3).innerText = levels[level].coinsReward;
+                row.insertCell(0).innerText = levelName;
+                row.insertCell(1).innerText = levels[levelName].plotsUnlocked;
+                row.insertCell(2).innerText = levels[levelName].xpRequired;
+                row.insertCell(3).innerText = levels[levelName].coinsReward;
                 const actionsCell = row.insertCell(4);
-                actionsCell.innerHTML = `<button onclick="deleteLevel('${level}')">Xóa</button>`;
+                actionsCell.innerHTML = `<button onclick="deleteLevel('${levelName}')">Xóa</button>
+                                         <button onclick="editLevel('${levelName}')">Sửa</button>`;
             });
         }
     }).catch((error) => {
@@ -110,6 +115,90 @@ window.deleteLevel = function(levelName) {
         alert('Có lỗi xảy ra khi xóa cấp độ!');
     });
 };
+
+// Hàm sửa mật khẩu người dùng
+function editUserPassword(username) {
+    const newPassword = prompt("Nhập mật khẩu mới cho người dùng " + username + ":");
+    
+    if (newPassword) {
+        const userRef = ref(database, 'Users/' + username);
+        set(userRef, {
+            username: username,
+            password: newPassword  // Cập nhật mật khẩu mới
+        }).then(() => {
+            alert('Mật khẩu đã được sửa thành công!');
+            displayUsers(); // Cập nhật lại danh sách người dùng
+        }).catch((error) => {
+            console.error("Có lỗi khi sửa mật khẩu người dùng: ", error);
+            alert('Có lỗi xảy ra khi sửa mật khẩu người dùng!');
+        });
+    }
+}
+
+// Hàm sửa thông tin cây trồng
+function editPlant(plantId) {
+    const plantRef = ref(database, 'Plants/' + plantId);
+
+    // Lấy thông tin hiện tại của cây trồng
+    get(plantRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const plant = snapshot.val();
+            const newName = prompt("Sửa tên cây trồng:", plant.name);
+            const newGrowthTime = prompt("Sửa thời gian sinh trưởng:", plant.growthTime);
+            const newExpReward = prompt("Sửa phần thưởng kinh nghiệm:", plant.expReward);
+            const newCoinsReward = prompt("Sửa phần thưởng xu:", plant.coinsReward);
+            const newSeedCost = prompt("Sửa chi phí hạt giống:", plant.seedCost);
+
+            // Cập nhật lại thông tin cây trồng
+            set(plantRef, {
+                name: newName || plant.name,
+                growthTime: newGrowthTime ? parseInt(newGrowthTime) : plant.growthTime,
+                expReward: newExpReward ? parseInt(newExpReward) : plant.expReward,
+                coinsReward: newCoinsReward ? parseInt(newCoinsReward) : plant.coinsReward,
+                seedCost: newSeedCost ? parseInt(newSeedCost) : plant.seedCost
+            }).then(() => {
+                alert('Cây trồng đã được sửa thành công!');
+                displayPlants(); // Cập nhật lại danh sách cây trồng
+            }).catch((error) => {
+                console.error("Có lỗi khi sửa cây trồng: ", error);
+                alert('Có lỗi xảy ra khi sửa cây trồng!');
+            });
+        }
+    }).catch((error) => {
+        console.error("Có lỗi khi lấy thông tin cây trồng: ", error);
+    });
+}
+
+// Hàm sửa thông tin cấp độ
+function editLevel(levelName) {
+    const levelRef = ref(database, 'Levels/' + levelName);
+
+    // Lấy thông tin hiện tại của cấp độ
+    get(levelRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const level = snapshot.val();
+            const newPlotsUnlocked = prompt("Sửa số ô đất mở:", level.plotsUnlocked);
+            const newXpRequired = prompt("Sửa kinh nghiệm yêu cầu:", level.xpRequired);
+            const newCoinsReward = prompt("Sửa phần thưởng xu:", level.coinsReward);
+
+            // Cập nhật lại thông tin cấp độ
+            set(levelRef, {
+                plotsUnlocked: newPlotsUnlocked ? parseInt(newPlotsUnlocked) : level.plotsUnlocked,
+                xpRequired: newXpRequired ? parseInt(newXpRequired) : level.xpRequired,
+                coinsReward: newCoinsReward ? parseInt(newCoinsReward) : level.coinsReward
+            }).then(() => {
+                alert('Cấp độ đã được sửa thành công!');
+                displayLevels(); // Cập nhật lại danh sách cấp độ
+            }).catch((error) => {
+                console.error("Có lỗi khi sửa cấp độ: ", error);
+                alert('Có lỗi xảy ra khi sửa cấp độ!');
+            });
+        }
+    }).catch((error) => {
+        console.error("Có lỗi khi lấy thông tin cấp độ: ", error);
+    });
+}
+
 // Thêm người dùng
 document.getElementById('addUserBtn').addEventListener('click', () => {
     const username = prompt('Nhập tên người dùng mới:');

@@ -106,3 +106,87 @@ button[action="delete"] {
 button[action="delete"]:hover {
     background-color: #FF3B3B; /* Màu đỏ đậm khi hover */
 }
+
+/* Media Queries cho responsive design */
+
+/* Khi màn hình có chiều rộng nhỏ hơn 768px (Mobile devices) */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 2em;
+    }
+
+    section h3 {
+        font-size: 1.5em;
+    }
+
+    table th, table td {
+        padding: 10px;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+
+    input[type="text"], input[type="number"], select {
+        font-size: 0.9em;
+    }
+}
+
+/* Khi màn hình có chiều rộng nhỏ hơn 576px (Very small screens like phones in portrait mode) */
+@media (max-width: 576px) {
+    h2 {
+        font-size: 1.5em;
+    }
+
+    section h3 {
+        font-size: 1.2em;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    input[type="text"], input[type="number"], select {
+        font-size: 0.8em;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
+
+    section {
+        margin-bottom: 30px;
+    }
+}
+
+/* Khi màn hình có chiều rộng từ 768px đến 1024px (Tablets) */
+@media (max-width: 1024px) and (min-width: 768px) {
+    .container {
+        width: 85%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 2.2em;
+    }
+
+    section h3 {
+        font-size: 1.6em;
+    }
+
+    button {
+        padding: 10px 18px;
+        font-size: 1em;
+    }
+
+    table th, table td {
+        padding: 11px;
+    }
+}
