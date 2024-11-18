@@ -25,7 +25,7 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
                 password: password // Lưu mật khẩu (nên mã hóa trước khi lưu vào DB)
             })
             .then(() => {
-                // Thêm thông tin mặc định vào bảng UserProfiles và UserLand
+                // Thêm thông tin mặc định vào bảng UserProfiles
                 set(ref(database, 'UserProfiles/' + username), {
                     xp: 0,                // Kinh nghiệm ban đầu
                     level: 1,             // Cấp độ ban đầu
