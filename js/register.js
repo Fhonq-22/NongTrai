@@ -20,6 +20,9 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
     })
     .then(() => {
         alert('Đăng ký thành công!');
+        
+        // Chuyển hướng đến trang đăng nhập (login.html)
+        window.location.href = "login.html";
     })
     .catch((error) => {
         alert(`Có lỗi xảy ra: ${error.message}`);
