@@ -27,10 +27,15 @@ section h3 {
 }
 
 /* Các bảng dữ liệu (users, plants, levels) */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Tạo cuộn mượt cho các thiết bị cảm ứng */
+    margin-bottom: 30px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 30px;
 }
 
 table th, table td {
@@ -136,6 +141,10 @@ button[action="delete"]:hover {
     input[type="text"], input[type="number"], select {
         font-size: 0.9em;
     }
+
+    .table-wrapper {
+        margin-bottom: 20px;
+    }
 }
 
 /* Khi màn hình có chiều rộng nhỏ hơn 576px (Very small screens like phones in portrait mode) */
@@ -164,6 +173,10 @@ button[action="delete"]:hover {
     section {
         margin-bottom: 30px;
     }
+
+    .table-wrapper {
+        margin-bottom: 10px;
+    }
 }
 
 /* Khi màn hình có chiều rộng từ 768px đến 1024px (Tablets) */
@@ -188,5 +201,9 @@ button[action="delete"]:hover {
 
     table th, table td {
         padding: 11px;
+    }
+
+    .table-wrapper {
+        margin-bottom: 25px;
     }
 }

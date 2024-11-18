@@ -117,7 +117,7 @@ window.deleteLevel = function(levelName) {
 };
 
 // Hàm sửa mật khẩu người dùng
-function editUserPassword(username) {
+window.editUserPassword = function(username) {
     const newPassword = prompt("Nhập mật khẩu mới cho người dùng " + username + ":");
     
     if (newPassword) {
@@ -136,7 +136,7 @@ function editUserPassword(username) {
 }
 
 // Hàm sửa thông tin cây trồng
-function editPlant(plantId) {
+window.editPlant = function(plantId) {
     const plantRef = ref(database, 'Plants/' + plantId);
 
     // Lấy thông tin hiện tại của cây trồng
@@ -170,7 +170,7 @@ function editPlant(plantId) {
 }
 
 // Hàm sửa thông tin cấp độ
-function editLevel(levelName) {
+window.editLevel = function(levelId) {
     const levelRef = ref(database, 'Levels/' + levelName);
 
     // Lấy thông tin hiện tại của cấp độ
