@@ -1,21 +1,28 @@
-// Import the shared Firebase configuration
+// Import đối tượng database từ firebase-config.js
 import { database } from "./firebase-config.js";
-import { ref, set } from "firebase/database"; // Dùng nếu bạn sử dụng Realtime Database
+import { ref, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
+// Lắng nghe sự kiện form submit để đăng ký người dùng
 document.getElementById('registerForm').addEventListener('submit', (e) => {
     e.preventDefault();
+    
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Thêm người dùng mới vào Realtime Database
+    if (!username || !password) {
+        alert("Vui lòng điền đầy đủ thông tin!");
+        return;
+    }
+
+    // Thêm người dùng mới vào Firebase Realtime Database
     set(ref(database, 'Users/' + username), {
-        password: password // Nên mã hóa mật khẩu trước khi lưu
+        password: password // Lưu mật khẩu (nên mã hóa trước khi lưu vào DB)
     })
     .then(() => {
-        alert('Registration successful!');
+        alert('Đăng ký thành công!');
     })
     .catch((error) => {
-        alert(`Error: ${error.message}`);
+        alert(`Có lỗi xảy ra: ${error.message}`);
         console.error(error);
     });
 });

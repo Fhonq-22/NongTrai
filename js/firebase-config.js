@@ -1,23 +1,26 @@
 // firebase-config.js
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"; // Nếu bạn sử dụng Firestore
-import { getDatabase } from "firebase/database"; // Nếu bạn sử dụng Realtime Database
 
-// Your Firebase configuration
+// Import các chức năng cần thiết từ Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+// Cấu hình Firebase của bạn
 const firebaseConfig = {
     apiKey: "AIzaSyCzbGRryfLe9EnMYxh9hMoD5VfUZ9igOac",
     authDomain: "farmdb-57f93.firebaseapp.com",
+    databaseURL: "https://farmdb-57f93-default-rtdb.firebaseio.com",
     projectId: "farmdb-57f93",
-    storageBucket: "farmdb-57f93.appspot.com",
+    storageBucket: "farmdb-57f93.firebasestorage.app",
     messagingSenderId: "84810548521",
     appId: "1:84810548521:web:37add9e61e9d26ff426338",
+    measurementId: "G-VYWKPDMMR1"
 };
 
-// Initialize Firebase
+// Khởi tạo Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export services
-export const auth = getAuth(app);
-export const firestore = getFirestore(app); // Nếu bạn dùng Firestore
-export const database = getDatabase(app); // Nếu bạn dùng Realtime Database
+// Lấy đối tượng database từ Firebase
+const database = getDatabase(app);
+
+// Export đối tượng database để sử dụng trong các module khác
+export { database };
