@@ -25,13 +25,44 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
                 password: password // Lưu mật khẩu (nên mã hóa trước khi lưu vào DB)
             })
             .then(() => {
-                alert('Đăng ký thành công!');
-                
-                // Chuyển hướng đến trang đăng nhập (login.html)
-                window.location.href = "login.html";
+                // Thêm thông tin mặc định vào bảng UserProfiles và UserLand
+                set(ref(database, 'UserProfiles/' + username), {
+                    xp: 0,                // Kinh nghiệm ban đầu
+                    level: 1,             // Cấp độ ban đầu
+                    coins: 100,           // Xu ban đầu
+                    plotsUnlocked: 1      // Số ô đất ban đầu
+                })
+                .then(() => {
+                    // Thêm ô đất mặc định vào UserLand
+                    set(ref(database, 'UserLand/' + username), {
+                        plots: [
+                            { 
+                                plantId: null,           // Chưa có cây trồng
+                                growthStatus: "empty",   // Trạng thái trống
+                                watered: false,          // Chưa tưới nước
+                                growthStartDate: null,   // Không có ngày sinh trưởng
+                                harvestDate: null       // Không có ngày thu hoạch
+                            }
+                        ]
+                    })
+                    .then(() => {
+                        alert('Đăng ký thành công!');
+                        
+                        // Chuyển hướng đến trang đăng nhập (login.html)
+                        window.location.href = "login.html";
+                    })
+                    .catch((error) => {
+                        alert(`Có lỗi xảy ra khi tạo UserLand: ${error.message}`);
+                        console.error(error);
+                    });
+                })
+                .catch((error) => {
+                    alert(`Có lỗi xảy ra khi tạo UserProfiles: ${error.message}`);
+                    console.error(error);
+                });
             })
             .catch((error) => {
-                alert(`Có lỗi xảy ra: ${error.message}`);
+                alert(`Có lỗi xảy ra khi đăng ký: ${error.message}`);
                 console.error(error);
             });
         }
