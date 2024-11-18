@@ -109,54 +109,54 @@ function deleteLevel(level) {
     }
 }
 
-// Thêm người dùng (chỉ đơn giản là ví dụ, bạn có thể thay đổi logic cho phù hợp)
+// Khởi tạo sự kiện cho các nút
 document.getElementById('addUserBtn').addEventListener('click', () => {
-    const username = prompt("Nhập tên người dùng mới:");
+    const username = prompt('Nhập tên người dùng mới:');
     if (username) {
-        set(ref(database, 'Users/' + username), { password: 'default' })
-            .then(() => {
-                displayUsers();
-                alert('Đã thêm người dùng!');
-            })
-            .catch((error) => {
-                alert('Có lỗi xảy ra khi thêm người dùng: ' + error.message);
-            });
+        set(ref(database, 'Users/' + username), {
+            username: username
+        }).then(() => {
+            displayUsers();
+            alert('Đã thêm người dùng!');
+        }).catch((error) => {
+            alert('Có lỗi xảy ra khi thêm người dùng: ' + error.message);
+        });
     }
 });
 
-// Thêm cây trồng
 document.getElementById('addPlantBtn').addEventListener('click', () => {
-    const plantName = prompt("Nhập tên cây trồng mới:");
+    const plantName = prompt('Nhập tên cây trồng mới:');
     if (plantName) {
-        const newPlantId = Date.now().toString(); // Sử dụng timestamp làm ID cây trồng mới
-        set(ref(database, 'Plants/' + newPlantId), { name: plantName })
-            .then(() => {
-                displayPlants();
-                alert('Đã thêm cây trồng!');
-            })
-            .catch((error) => {
-                alert('Có lỗi xảy ra khi thêm cây trồng: ' + error.message);
-            });
+        const newPlantRef = ref(database, 'Plants').push();
+        set(newPlantRef, {
+            name: plantName
+        }).then(() => {
+            displayPlants();
+            alert('Đã thêm cây trồng!');
+        }).catch((error) => {
+            alert('Có lỗi xảy ra khi thêm cây trồng: ' + error.message);
+        });
     }
 });
 
-// Thêm cấp độ
 document.getElementById('addLevelBtn').addEventListener('click', () => {
-    const level = prompt("Nhập cấp độ mới:");
-    const xpRequired = prompt("Nhập số kinh nghiệm yêu cầu cho cấp độ này:");
+    const level = prompt('Nhập tên cấp độ mới:');
+    const xpRequired = prompt('Nhập kinh nghiệm yêu cầu cho cấp độ này:');
     if (level && xpRequired) {
-        set(ref(database, 'Levels/' + level), { xpRequired: xpRequired })
-            .then(() => {
-                displayLevels();
-                alert('Đã thêm cấp độ!');
-            })
-            .catch((error) => {
-                alert('Có lỗi xảy ra khi thêm cấp độ: ' + error.message);
-            });
+        set(ref(database, 'Levels/' + level), {
+            xpRequired: xpRequired
+        }).then(() => {
+            displayLevels();
+            alert('Đã thêm cấp độ!');
+        }).catch((error) => {
+            alert('Có lỗi xảy ra khi thêm cấp độ: ' + error.message);
+        });
     }
 });
 
-// Gọi các hàm hiển thị dữ liệu khi trang load
-displayUsers();
-displayPlants();
-displayLevels();
+// Hiển thị tất cả các bảng ngay khi trang được tải
+window.onload = () => {
+    displayUsers();
+    displayPlants();
+    displayLevels();
+};
