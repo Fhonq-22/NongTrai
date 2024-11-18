@@ -18,7 +18,9 @@ function displayUsers() {
                 const row = usersTableBody.insertRow();
                 row.insertCell(0).innerText = username;
                 const actionsCell = row.insertCell(1);
-                actionsCell.innerHTML = `<button onclick="deleteUser('${username}')">Xóa</button>`;
+                if(username !== "Admin") {
+                    actionsCell.innerHTML = `<button onclick="deleteUser('${username}')">Xóa</button>`;
+                }
             });
         }
     }).catch((error) => {
@@ -74,7 +76,7 @@ function displayLevels() {
 }
 
 // Hàm xóa người dùng
-function deleteUser(userId) {
+window.deleteUser = function(userId) {
     const userRef = ref(database, 'Users/' + userId); // Lấy tham chiếu đến người dùng cần xóa
     remove(userRef).then(() => {
         alert('Người dùng đã bị xóa!');
@@ -83,10 +85,10 @@ function deleteUser(userId) {
         console.error("Có lỗi khi xóa người dùng: ", error);
         alert('Có lỗi xảy ra khi xóa người dùng!');
     });
-}
+};
 
 // Hàm xóa cây trồng
-function deletePlant(plantId) {
+window.deletePlant = function(plantId) {
     const plantRef = ref(database, 'Plants/' + plantId); // Lấy tham chiếu đến cây trồng cần xóa
     remove(plantRef).then(() => {
         alert('Cây trồng đã bị xóa!');
@@ -95,10 +97,10 @@ function deletePlant(plantId) {
         console.error("Có lỗi khi xóa cây trồng: ", error);
         alert('Có lỗi xảy ra khi xóa cây trồng!');
     });
-}
+};
 
 // Hàm xóa cấp độ
-function deleteLevel(levelName) {
+window.deleteLevel = function(levelName) {
     const levelRef = ref(database, 'Levels/' + levelName); // Lấy tham chiếu đến cấp độ cần xóa
     remove(levelRef).then(() => {
         alert('Cấp độ đã bị xóa!');
@@ -107,8 +109,7 @@ function deleteLevel(levelName) {
         console.error("Có lỗi khi xóa cấp độ: ", error);
         alert('Có lỗi xảy ra khi xóa cấp độ!');
     });
-}
-
+};
 // Thêm người dùng
 document.getElementById('addUserBtn').addEventListener('click', () => {
     const username = prompt('Nhập tên người dùng mới:');
