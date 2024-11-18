@@ -1,5 +1,5 @@
 import { database } from "./firebase-config.js";
-import { ref, get, set, remove } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import { ref, get, set, remove, push } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
 // Lấy các bảng dữ liệu từ Firebase
 const usersRef = ref(database, 'Users');
@@ -54,12 +54,12 @@ function displayLevels() {
 
         if (snapshot.exists()) {
             const levels = snapshot.val();
-            Object.keys(levels).forEach((level) => {
+            Object.keys(levels).forEach((levelId) => {
                 const row = levelsTableBody.insertRow();
-                row.insertCell(0).innerText = level;
-                row.insertCell(1).innerText = levels[level].xpRequired;
+                row.insertCell(0).innerText = levels[levelId].level;
+                row.insertCell(1).innerText = levels[levelId].xpRequired;
                 const actionsCell = row.insertCell(2);
-                actionsCell.innerHTML = `<button onclick="deleteLevel('${level}')">Xóa</button>`;
+                actionsCell.innerHTML = `<button onclick="deleteLevel('${levelId}')">Xóa</button>`;
             });
         }
     }).catch((error) => {
@@ -96,9 +96,9 @@ function deletePlant(plantId) {
 }
 
 // Xóa cấp độ
-function deleteLevel(level) {
-    if (confirm(`Bạn có chắc chắn muốn xóa cấp độ ${level}?`)) {
-        remove(ref(database, 'Levels/' + level))
+function deleteLevel(levelId) {
+    if (confirm(`Bạn có chắc chắn muốn xóa cấp độ này?`)) {
+        remove(ref(database, 'Levels/' + levelId))
             .then(() => {
                 displayLevels();
                 alert('Đã xóa cấp độ!');
@@ -109,7 +109,7 @@ function deleteLevel(level) {
     }
 }
 
-// Khởi tạo sự kiện cho các nút
+// Thêm người dùng
 document.getElementById('addUserBtn').addEventListener('click', () => {
     const username = prompt('Nhập tên người dùng mới:');
     if (username) {
@@ -124,12 +124,22 @@ document.getElementById('addUserBtn').addEventListener('click', () => {
     }
 });
 
+// Thêm cây trồng
 document.getElementById('addPlantBtn').addEventListener('click', () => {
     const plantName = prompt('Nhập tên cây trồng mới:');
-    if (plantName) {
-        const newPlantRef = ref(database, 'Plants').push();
+    const growthTime = prompt('Nhập thời gian sinh trưởng cây (tính bằng ngày):');
+    const expReward = prompt('Nhập số kinh nghiệm khi thu hoạch cây:');
+    const coinsReward = prompt('Nhập số xu khi thu hoạch cây:');
+    const seedCost = prompt('Nhập chi phí hạt giống cây:');
+
+    if (plantName && growthTime && expReward && coinsReward && seedCost) {
+        const newPlantRef = push(plantsRef);  // Sử dụng push để tạo ID ngẫu nhiên cho cây trồng
         set(newPlantRef, {
-            name: plantName
+            name: plantName,
+            growthTime: parseInt(growthTime),
+            expReward: parseInt(expReward),
+            coinsReward: parseInt(coinsReward),
+            seedCost: parseInt(seedCost)
         }).then(() => {
             displayPlants();
             alert('Đã thêm cây trồng!');
@@ -139,12 +149,20 @@ document.getElementById('addPlantBtn').addEventListener('click', () => {
     }
 });
 
+// Thêm cấp độ
 document.getElementById('addLevelBtn').addEventListener('click', () => {
-    const level = prompt('Nhập tên cấp độ mới:');
+    const level = prompt('Nhập cấp độ mới:');
+    const plotsUnlocked = prompt('Nhập số ô đất mở cho cấp độ này:');
     const xpRequired = prompt('Nhập kinh nghiệm yêu cầu cho cấp độ này:');
-    if (level && xpRequired) {
-        set(ref(database, 'Levels/' + level), {
-            xpRequired: xpRequired
+    const coinsReward = prompt('Nhập phần thưởng xu khi đạt cấp độ này:');
+
+    if (level && plotsUnlocked && xpRequired && coinsReward) {
+        const newLevelRef = push(levelsRef);  // Sử dụng push để tạo ID ngẫu nhiên cho cấp độ
+        set(newLevelRef, {
+            level: parseInt(level),
+            plotsUnlocked: parseInt(plotsUnlocked),
+            xpRequired: parseInt(xpRequired),
+            coinsReward: parseInt(coinsReward)
         }).then(() => {
             displayLevels();
             alert('Đã thêm cấp độ!');
