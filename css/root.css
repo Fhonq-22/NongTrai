@@ -1,15 +1,15 @@
 /* root.css - Các biến màu sắc và cài đặt cơ bản */
 :root {
-    --primary-color: #A3D8F4; /* Màu xanh pastel nhạt (gợi lên bầu trời trong xanh) */
-    --secondary-color: #F3C8B8; /* Màu hồng đào nhạt (cảm giác nhẹ nhàng và ấm áp) */
-    --accent-color: #FFD29D; /* Màu vàng kem (gợi lên ánh sáng ban mai) */
-    --background-color: #F1F8F5; /* Màu nền xanh lá cây pastel nhạt (cảm giác tự nhiên) */
-    --text-color: #4F5D75; /* Màu xám đậm (tạo độ tương phản, dễ đọc) */
-    --button-bg-color: #C8E0A6; /* Màu xanh lá cây nhạt (mang lại cảm giác tươi mới của cây cối) */
-    --button-hover-bg-color: #A4D3A0; /* Màu xanh lá cây đậm hơn khi hover */
-    --input-bg-color: #FFFFFF; /* Màu nền trắng cho các input */
-    --input-border-color: #C9D6D5; /* Màu viền input (nhẹ nhàng, dễ chịu) */
-    --input-focus-border-color: #7D9E6E; /* Màu viền khi input được focus (xanh lá cây tươi) */
+    --primary-color: #7FBCE9; /* Màu xanh pastel đậm hơn */
+    --secondary-color: #E7A497; /* Màu hồng đào đậm hơn */
+    --accent-color: #FFC374; /* Màu vàng kem đậm hơn */
+    --background-color: #D9F0E5; /* Màu nền xanh lá cây pastel đậm hơn */
+    --text-color: #364A63; /* Màu xám xanh đậm hơn */
+    --button-bg-color: #A4C88A; /* Màu xanh lá cây nhạt đậm hơn */
+    --button-hover-bg-color: #8BB374; /* Màu xanh lá cây đậm hơn khi hover */
+    --input-bg-color: #F8F9FA; /* Màu nền trắng hơi ngà */
+    --input-border-color: #A3B8B3; /* Màu viền input đậm hơn */
+    --input-focus-border-color: #5C8A5A; /* Màu viền khi input được focus đậm hơn */
 }
 
 /* Định nghĩa font chữ toàn trang */

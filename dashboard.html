@@ -5,14 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+
 </head>
 <body>
     <div class="container">
-        <h2>Chào mừng đến với Dashboard Nông trại</h2>
-        <p>Đây là trang chính của bạn sau khi đăng nhập thành công.</p>
-        <!-- Nội dung dashboard ở đây -->
+        <h2>Nông trại</h2>
+
+        <section id="userInfo">
+            <div class="user-details">
+                <!-- Hiển thị username và level (counter icons) cùng một dòng -->
+                <div class="detail user-level">
+                    <span id="username" class="value">Đang tải...</span> <!-- Tên người dùng -->
+                    <div id="level" class="level-icons"></div> <!-- Các icon level (counter) sẽ hiển thị ở đây -->
+                </div>
+        
+                <!-- Hiển thị số xp -->
+                <div class="detail">
+                    <span class="material-symbols-outlined">kid_star</span>
+                    <span id="xp" class="value">Đang tải...</span>
+                </div>
+        
+                <!-- Hiển thị số xu -->
+                <div class="detail">
+                    <i class="material-icons">paid</i>
+                    <span id="coins" class="value">Đang tải...</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="farmPlots">
+            <div class="plots-container">
+                <!-- Các ô đất sẽ được thêm động tại đây -->
+            </div>
+        </section>        
     </div>
+
     <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>

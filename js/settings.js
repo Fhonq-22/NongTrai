@@ -41,15 +41,20 @@ function displayPlants() {
             const plants = snapshot.val();
             Object.keys(plants).forEach((plantId) => {
                 const row = plantsTableBody.insertRow();
-                row.insertCell(0).innerText = plants[plantId].name;
+                row.insertCell(0).innerText = plantId;  // Hiển thị tên cây trồng
                 row.insertCell(1).innerText = plants[plantId].growthTime;
                 row.insertCell(2).innerText = plants[plantId].expReward;
-                row.insertCell(3).innerText = plants[plantId].coinsReward;
+                row.insertCell(3).innerText = plants[plantId].coinsReward;  // Hiển thị coinsReward
                 row.insertCell(4).innerText = plants[plantId].seedCost;
                 const actionsCell = row.insertCell(5);
                 actionsCell.innerHTML = `<button onclick="deletePlant('${plantId}')">Xóa</button>
                                          <button onclick="editPlant('${plantId}')">Sửa</button>`;
             });
+        } else {
+            const row = plantsTableBody.insertRow();
+            const cell = row.insertCell(0);
+            cell.colSpan = 6;
+            cell.innerText = 'Không có cây trồng nào!';
         }
     }).catch((error) => {
         console.error("Có lỗi xảy ra khi lấy dữ liệu cây trồng:", error);
@@ -137,13 +142,12 @@ window.editUserPassword = function(username) {
 
 // Hàm sửa thông tin cây trồng
 window.editPlant = function(plantId) {
-    const plantRef = ref(database, 'Plants/' + plantId);
+    const plantRef = ref(database, 'Plants/' + plantId); // 'plantId' chính là tên cây trồng
 
     // Lấy thông tin hiện tại của cây trồng
     get(plantRef).then((snapshot) => {
         if (snapshot.exists()) {
             const plant = snapshot.val();
-            const newName = prompt("Sửa tên cây trồng:", plant.name);
             const newGrowthTime = prompt("Sửa thời gian sinh trưởng:", plant.growthTime);
             const newExpReward = prompt("Sửa phần thưởng kinh nghiệm:", plant.expReward);
             const newCoinsReward = prompt("Sửa phần thưởng xu:", plant.coinsReward);
@@ -151,7 +155,6 @@ window.editPlant = function(plantId) {
 
             // Cập nhật lại thông tin cây trồng
             set(plantRef, {
-                name: newName || plant.name,
                 growthTime: newGrowthTime ? parseInt(newGrowthTime) : plant.growthTime,
                 expReward: newExpReward ? parseInt(newExpReward) : plant.expReward,
                 coinsReward: newCoinsReward ? parseInt(newCoinsReward) : plant.coinsReward,
@@ -219,19 +222,21 @@ document.getElementById('addPlantBtn').addEventListener('click', () => {
     const plantName = prompt('Nhập tên cây trồng mới:');
     const growthTime = prompt('Nhập thời gian sinh trưởng cây (tính bằng ngày):');
     const expReward = prompt('Nhập số kinh nghiệm khi thu hoạch cây:');
-    const coinsReward = prompt('Nhập số xu khi thu hoạch cây:');
+    const coinsReward = prompt('Nhập số tiền thưởng khi thu hoạch cây:');  // Thêm coinsReward
     const seedCost = prompt('Nhập chi phí hạt giống cây:');
 
-    if (plantName && growthTime && expReward && coinsReward && seedCost) {
-        const newPlantRef = push(plantsRef);  // Sử dụng push để tạo ID ngẫu nhiên cho cây trồng
+    if (plantName && growthTime && expReward && seedCost && coinsReward) {
+        // Tạo tham chiếu đến bảng Plants và dùng tên cây làm khóa
+        const newPlantRef = ref(database, `Plants/${plantName}`);  // Lưu trong bảng Plants, với tên cây làm ID
+        
+        // Lưu dữ liệu cây trồng
         set(newPlantRef, {
-            name: plantName,
-            growthTime: parseInt(growthTime),
             expReward: parseInt(expReward),
-            coinsReward: parseInt(coinsReward),
-            seedCost: parseInt(seedCost)
+            growthTime: parseInt(growthTime),
+            seedCost: parseInt(seedCost),
+            coinsReward: parseInt(coinsReward)  // Lưu coinsReward
         }).then(() => {
-            displayPlants();
+            displayPlants();  // Hiển thị lại các cây trồng
             alert('Đã thêm cây trồng!');
         }).catch((error) => {
             alert('Có lỗi xảy ra khi thêm cây trồng: ' + error.message);
@@ -247,7 +252,8 @@ document.getElementById('addLevelBtn').addEventListener('click', () => {
     const coinsReward = prompt('Nhập phần thưởng xu khi đạt cấp độ này:');
 
     if (level && plotsUnlocked && xpRequired && coinsReward) {
-        const newLevelRef = push(levelsRef);  // Sử dụng push để tạo ID ngẫu nhiên cho cấp độ
+        // Sử dụng level làm ID để tạo một đường dẫn cố định cho cấp độ này
+        const newLevelRef = ref(database, 'Levels/' + level);  // 'levels' là tên bảng, và level là ID cố định
         set(newLevelRef, {
             level: parseInt(level),
             plotsUnlocked: parseInt(plotsUnlocked),

@@ -1,0 +1,127 @@
+/* Tổng thể container */
+.container {
+    background-color: var(--input-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 90%;
+}
+
+/* Phần thông tin người dùng */
+#userInfo {
+    padding: 10px;
+    border: 2px solid #4CAF50; /* Màu viền sáng và dễ nhìn */
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: #f4f4f9; /* Nền sáng để làm nổi bật thông tin */
+    text-align: left;
+    width: fit-content;
+    margin-left: 0;
+    display: inline-block;
+}
+
+#userInfo h3 {
+    margin-bottom: 10px; /* Giảm khoảng cách giữa tiêu đề và các dòng bên dưới */
+    color: #333; /* Màu chữ tối để dễ đọc */
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Căn trái */
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; /* Giảm khoảng cách giữa các dòng */
+    font-size: 14px;
+    color: #333; /* Chữ tối để dễ đọc */
+}
+
+/* Đảm bảo các icon và giá trị có một khoảng cách hợp lý */
+.detail i, .detail span {
+    font-size: 24px;  /* Giảm kích thước icon */
+    color: #4CAF50;  /* Màu xanh lá cho icon */
+    margin-right: 8px;  /* Giảm khoảng cách giữa icon và giá trị */
+}
+
+/* Đặt tên người dùng và level trên cùng một dòng */
+.user-level {
+    display: flex;
+    align-items: center;
+}
+
+/* Các icon level (counter) được căn chỉnh dọc theo tên người dùng */
+#level {
+    display: flex;
+    margin-left: 8px; /* Giảm khoảng cách giữa tên và các icon level */
+}
+
+/* Các icon level (counter) sẽ có kích thước nhỏ hơn */
+#level span {
+    font-size: 20px;  /* Giảm kích thước icon level */
+    margin-right: 5px;
+    color: #FFC107;  /* Màu vàng cho icon level */
+}
+
+/* Các icon xp và xu */
+.material-symbols-outlined, .material-icons {
+    font-size: 24px; /* Giảm kích thước của icon */
+    color: #FF9800;  /* Màu cam cho icon xp/xu */
+    margin-right: 8px;  /* Khoảng cách giữa icon và giá trị */
+}
+
+/* Căn chỉnh các dòng theo đúng layout */
+.value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333; /* Màu chữ tối để dễ đọc */
+}
+
+/* Ô đất */
+#farmPlots {
+    text-align: center;
+}
+
+.plots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Sử dụng auto-fill và minmax để tạo các cột linh động */
+    gap: 10px;
+    justify-items: center;
+    margin-top: 15px;
+}
+
+.plot {
+    width: 100%;  /* Lấy chiều rộng 100% của cột */
+    aspect-ratio: 1;  /* Đảm bảo các ô có tỷ lệ 1:1 (vuông) */
+    display: flex;
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+    align-items: center;  /* Căn giữa theo chiều dọc */
+    font-size: 24px;
+    border-radius: 8px;
+    border: 2px solid var(--input-border-color);
+    transition: all 0.3s ease;
+    background: var(--button-bg-color);
+    color: var(--text-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Các trạng thái của ô đất */
+.plot.unlocked:hover {
+    background-color: var(--button-hover-bg-color);
+    cursor: pointer;
+}
+
+.plot.locked {
+    background: linear-gradient(to bottom, var(--background-color), var(--accent-color));
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Biểu tượng trong ô đất */
+.plot i, .plot span.material-symbols-outlined {
+    font-size: 36px;  /* Điều chỉnh kích thước icon */
+    color: var(--text-color);
+}
