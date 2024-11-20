@@ -99,12 +99,12 @@ window.deleteUser = function(userId) {
         remove(landRef)       // Xóa thông tin ô đất trong UserLand
     ])
     .then(() => {
-        alert('Người dùng và dữ liệu liên quan đã bị xóa!');
+        showNotification('Người dùng và dữ liệu liên quan đã bị xóa!', 'succes');
         displayUsers(); // Cập nhật lại danh sách người dùng sau khi xóa
     })
     .catch((error) => {
         console.error("Có lỗi khi xóa dữ liệu: ", error);
-        alert('Có lỗi xảy ra khi xóa người dùng hoặc dữ liệu liên quan!');
+        showNotification('Có lỗi xảy ra khi xóa người dùng hoặc dữ liệu liên quan!', 'error');
     });
 };
 
@@ -112,11 +112,11 @@ window.deleteUser = function(userId) {
 window.deletePlant = function(plantId) {
     const plantRef = ref(database, 'Plants/' + plantId); // Lấy tham chiếu đến cây trồng cần xóa
     remove(plantRef).then(() => {
-        alert('Cây trồng đã bị xóa!');
+        showNotification('Cây trồng đã bị xóa!', 'succes');
         displayPlants(); // Cập nhật lại danh sách cây trồng sau khi xóa
     }).catch((error) => {
         console.error("Có lỗi khi xóa cây trồng: ", error);
-        alert('Có lỗi xảy ra khi xóa cây trồng!');
+        showNotification('Có lỗi xảy ra khi xóa cây trồng!', 'error');
     });
 };
 
@@ -124,32 +124,53 @@ window.deletePlant = function(plantId) {
 window.deleteLevel = function(levelName) {
     const levelRef = ref(database, 'Levels/' + levelName); // Lấy tham chiếu đến cấp độ cần xóa
     remove(levelRef).then(() => {
-        alert('Cấp độ đã bị xóa!');
+        showNotification('Cấp độ đã bị xóa!', 'succes');
         displayLevels(); // Cập nhật lại danh sách cấp độ sau khi xóa
     }).catch((error) => {
         console.error("Có lỗi khi xóa cấp độ: ", error);
-        alert('Có lỗi xảy ra khi xóa cấp độ!');
+        showNotification('Có lỗi xảy ra khi xóa cấp độ!', 'error');
     });
 };
 
 // Hàm sửa mật khẩu người dùng
-window.editUserPassword = function(username) {
-    const newPassword = prompt("Nhập mật khẩu mới cho người dùng " + username + ":");
-    
-    if (newPassword) {
-        const userRef = ref(database, 'Users/' + username);
-        set(userRef, {
-            username: username,
-            password: newPassword  // Cập nhật mật khẩu mới
-        }).then(() => {
-            alert('Mật khẩu đã được sửa thành công!');
-            displayUsers(); // Cập nhật lại danh sách người dùng
-        }).catch((error) => {
-            console.error("Có lỗi khi sửa mật khẩu người dùng: ", error);
-            alert('Có lỗi xảy ra khi sửa mật khẩu người dùng!');
-        });
+window.editUserPassword = async function(username) {
+    const userRef = ref(database, 'Users/' + username);
+
+    try {
+        // Lấy thông tin người dùng từ cơ sở dữ liệu
+        const snapshot = await get(userRef);
+
+        if (snapshot.exists()) {
+            const user = snapshot.val();
+
+            // Sử dụng showPopup để người dùng nhập mật khẩu mới, với mật khẩu cũ làm giá trị mặc định
+            const newPassword = await showPopup("Nhập mật khẩu mới cho " + username + ":", user.password);
+
+            if (newPassword) {
+                // Cập nhật mật khẩu mới cho người dùng
+                await set(userRef, {
+                    username: username,
+                    password: newPassword  // Cập nhật mật khẩu mới
+                });
+
+                showNotification('Mật khẩu đã được sửa thành công!', 'succes');
+                displayUsers(); // Cập nhật lại danh sách người dùng
+            } else {
+                console.log('Không có mật khẩu mới được nhập.');
+                showNotification('Không có mật khẩu mới được nhập!', 'info');
+            }
+
+        } else {
+            console.log('Không tìm thấy người dùng với tên: ' + username);
+            showNotification('Không tìm thấy người dùng với tên: ' + username, 'warning');
+        }
+
+    } catch (error) {
+        console.error("Có lỗi khi sửa mật khẩu người dùng: ", error);
+        showNotification('Có lỗi xảy ra khi sửa mật khẩu người dùng!', 'error');
     }
-}
+};
+
 
 // Hàm sửa thông tin cây trồng
 window.editPlant = async function(plantId) {
@@ -176,52 +197,58 @@ window.editPlant = async function(plantId) {
                 seedCost: newSeedCost ? parseInt(newSeedCost) : plant.seedCost
             });
 
-            alert('Cây trồng đã được sửa thành công!');
+            showNotification('Cây trồng đã được sửa thành công!', 'succes');
             displayPlants(); // Cập nhật lại danh sách cây trồng
 
         } else {
             console.log('Không tìm thấy cây trồng với ID:', plantId);
+            showNotification('Không tìm thấy cây trồng với ID:'+ plantId, 'warning');
         }
     } catch (error) {
         console.error("Có lỗi khi sửa cây trồng: ", error);
-        alert('Có lỗi xảy ra khi sửa cây trồng!');
+        showNotification('Có lỗi xảy ra khi sửa cây trồng!', 'error');
     }
 };
 
-
 // Hàm sửa thông tin cấp độ
-window.editLevel = function(levelName) {
+window.editLevel = async function(levelName) {
     const levelRef = ref(database, 'Levels/' + levelName);
 
-    // Lấy thông tin hiện tại của cấp độ
-    get(levelRef).then((snapshot) => {
+    try {
+        // Lấy thông tin hiện tại của cấp độ
+        const snapshot = await get(levelRef);
+
         if (snapshot.exists()) {
             const level = snapshot.val();
-            const newPlotsUnlocked = prompt("Sửa số ô đất mở:", level.plotsUnlocked);
-            const newXpRequired = prompt("Sửa kinh nghiệm yêu cầu:", level.xpRequired);
-            const newCoinsReward = prompt("Sửa phần thưởng xu:", level.coinsReward);
+
+            // Sử dụng showPopup thay cho prompt để lấy thông tin mới
+            const newPlotsUnlocked = await showPopup("Sửa số ô đất mở:", level.plotsUnlocked);
+            const newXpRequired = await showPopup("Sửa kinh nghiệm yêu cầu:", level.xpRequired);
+            const newCoinsReward = await showPopup("Sửa phần thưởng xu:", level.coinsReward);
 
             // Cập nhật lại thông tin cấp độ
-            set(levelRef, {
+            await set(levelRef, {
                 plotsUnlocked: newPlotsUnlocked ? parseInt(newPlotsUnlocked) : level.plotsUnlocked,
                 xpRequired: newXpRequired ? parseInt(newXpRequired) : level.xpRequired,
                 coinsReward: newCoinsReward ? parseInt(newCoinsReward) : level.coinsReward
-            }).then(() => {
-                alert('Cấp độ đã được sửa thành công!');
-                displayLevels(); // Cập nhật lại danh sách cấp độ
-            }).catch((error) => {
-                console.error("Có lỗi khi sửa cấp độ: ", error);
-                alert('Có lỗi xảy ra khi sửa cấp độ!');
             });
+
+            showNotification('Cấp độ đã được sửa thành công!', 'succes');
+            displayLevels(); // Cập nhật lại danh sách cấp độ
+
+        } else {
+            console.log('Không tìm thấy cấp độ với tên:', levelName);
+            showNotification('Không tìm thấy cấp độ với tên:'+ levelName, 'warning');
         }
-    }).catch((error) => {
-        console.error("Có lỗi khi lấy thông tin cấp độ: ", error);
-    });
-}
+    } catch (error) {
+        console.error("Có lỗi khi sửa cấp độ: ", error);
+        showNotification('Có lỗi xảy ra khi sửa cấp độ!', 'error');
+    }
+};
 
 // Thêm người dùng
-document.getElementById('addUserBtn').addEventListener('click', () => {
-    const username = prompt('Nhập tên người dùng mới:');
+document.getElementById('addUserBtn').addEventListener('click', async () => {
+    const username = await showPopup("Nhập tên người dùng mới:", "");
     
     if (username) {
         // Kiểm tra xem tên người dùng đã tồn tại chưa
@@ -230,7 +257,7 @@ document.getElementById('addUserBtn').addEventListener('click', () => {
         get(userRef).then((snapshot) => {
             if (snapshot.exists()) {
                 // Nếu tên người dùng đã tồn tại, thông báo lỗi
-                alert('Tên người dùng đã tồn tại!');
+                showNotification('Tên người dùng đã tồn tại!', 'warning');
             } else {
                 // Nếu tên người dùng chưa tồn tại, thêm người dùng vào Firebase
                 set(ref(database, 'Users/' + username), {
@@ -258,39 +285,39 @@ document.getElementById('addUserBtn').addEventListener('click', () => {
                             ]
                         })
                         .then(() => {
-                            alert('Đã thêm người dùng thành công!');
+                            showNotification('Đã thêm người dùng thành công!', 'succes');
                             // Tải lại danh sách người dùng
                             displayUsers();
                         })
                         .catch((error) => {
-                            alert(`Có lỗi xảy ra khi tạo UserLand: ${error.message}`);
+                            showNotification(`Có lỗi xảy ra khi tạo UserLand: ${error.message}`, 'error');
                             console.error(error);
                         });
                     })
                     .catch((error) => {
-                        alert(`Có lỗi xảy ra khi tạo UserProfiles: ${error.message}`);
+                        showNotification(`Có lỗi xảy ra khi tạo UserProfiles: ${error.message}`, 'error');
                         console.error(error);
                     });
                 })
                 .catch((error) => {
-                    alert(`Có lỗi xảy ra khi thêm người dùng: ${error.message}`);
+                    showNotification(`Có lỗi xảy ra khi thêm người dùng: ${error.message}`, 'error');
                     console.error(error);
                 });
             }
         }).catch((error) => {
-            alert(`Có lỗi xảy ra khi kiểm tra tên người dùng: ${error.message}`);
+            showNotification(`Có lỗi xảy ra khi kiểm tra tên người dùng: ${error.message}`, 'error');
             console.error(error);
         });
     }
 });
 
-// Thêm cây trồng
-document.getElementById('addPlantBtn').addEventListener('click', () => {
-    const plantName = prompt('Nhập tên cây trồng mới:');
-    const growthTime = prompt('Nhập thời gian sinh trưởng cây (tính bằng ngày):');
-    const expReward = prompt('Nhập số kinh nghiệm khi thu hoạch cây:');
-    const coinsReward = prompt('Nhập số tiền thưởng khi thu hoạch cây:');  // Thêm coinsReward
-    const seedCost = prompt('Nhập chi phí hạt giống cây:');
+// Hàm thêm cây trồng
+document.getElementById('addPlantBtn').addEventListener('click', async () => {
+    const plantName = await showPopup("Nhập tên cây trồng mới:", "");
+    const growthTime = await showPopup("Nhập thời gian sinh trưởng cây (tính bằng ngày):", "");
+    const expReward = await showPopup("Nhập số kinh nghiệm khi thu hoạch cây:", "");
+    const coinsReward = await showPopup("Nhập số tiền thưởng khi thu hoạch cây:", "");
+    const seedCost = await showPopup("Nhập chi phí hạt giống cây:", "");
 
     if (plantName && growthTime && expReward && seedCost && coinsReward) {
         // Tạo tham chiếu đến bảng Plants và dùng tên cây làm khóa
@@ -304,34 +331,40 @@ document.getElementById('addPlantBtn').addEventListener('click', () => {
             coinsReward: parseInt(coinsReward)  // Lưu coinsReward
         }).then(() => {
             displayPlants();  // Hiển thị lại các cây trồng
-            alert('Đã thêm cây trồng!');
+            showNotification('Đã thêm cây trồng!', 'succes');
         }).catch((error) => {
-            alert('Có lỗi xảy ra khi thêm cây trồng: ' + error.message);
+            showNotification('Có lỗi xảy ra khi thêm cây trồng: ' + error.message, 'error');
         });
+    } else {
+        showNotification("Tất cả các trường thông tin đều phải được nhập!", 'warning');
     }
 });
 
-// Thêm cấp độ
-document.getElementById('addLevelBtn').addEventListener('click', () => {
-    const level = prompt('Nhập cấp độ mới:');
-    const plotsUnlocked = prompt('Nhập số ô đất mở cho cấp độ này:');
-    const xpRequired = prompt('Nhập kinh nghiệm yêu cầu cho cấp độ này:');
-    const coinsReward = prompt('Nhập phần thưởng xu khi đạt cấp độ này:');
+// Hàm thêm cấp độ
+document.getElementById('addLevelBtn').addEventListener('click', async () => {
+    const levelName = await showPopup("Nhập tên cấp độ mới:", "");
+    const plotsUnlocked = await showPopup("Nhập số ô đất mở cho cấp độ này:", "");
+    const xpRequired = await showPopup("Nhập kinh nghiệm yêu cầu cho cấp độ này:", "");
+    const coinsReward = await showPopup("Nhập phần thưởng xu khi đạt cấp độ này:", "");
 
-    if (level && plotsUnlocked && xpRequired && coinsReward) {
-        // Sử dụng level làm ID để tạo một đường dẫn cố định cho cấp độ này
-        const newLevelRef = ref(database, 'Levels/' + level);  // 'levels' là tên bảng, và level là ID cố định
+    if (levelName && plotsUnlocked && xpRequired && coinsReward) {
+        // Sử dụng tên cấp độ làm ID để tạo một đường dẫn cố định cho cấp độ này
+        const newLevelRef = ref(database, 'Levels/' + levelName);  // 'Levels' là tên bảng, và levelName là ID cố định
+        
+        // Lưu dữ liệu cấp độ
         set(newLevelRef, {
-            level: parseInt(level),
+            level: parseInt(levelName),          // Dữ liệu cấp độ, có thể dùng levelName hoặc số tương ứng
             plotsUnlocked: parseInt(plotsUnlocked),
             xpRequired: parseInt(xpRequired),
             coinsReward: parseInt(coinsReward)
         }).then(() => {
-            displayLevels();
-            alert('Đã thêm cấp độ!');
+            displayLevels();  // Hiển thị lại các cấp độ
+            showNotification("Đã thêm cấp độ!", 'succes');
         }).catch((error) => {
-            alert('Có lỗi xảy ra khi thêm cấp độ: ' + error.message);
+            showNotification('Có lỗi xảy ra khi thêm cấp độ: ' + error.message, 'error');
         });
+    } else {
+        showNotification("Tất cả các trường thông tin đều phải được nhập!", 'warning');
     }
 });
 
@@ -349,5 +382,6 @@ window.onload = () => {
         displayUsers();
         displayPlants();
         displayLevels();
+        showNotification('Đăng nhập thành công!', 'succes');
     }
 };

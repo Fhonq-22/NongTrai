@@ -1,0 +1,64 @@
+/* Định dạng chung cho notification popup */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 30px;
+    background-color: rgba(76, 175, 80, 0.8);  /* Màu nền xanh với độ trong suốt */
+    color: white;
+    border-radius: 10px;  /* Viền tròn mượt mà */
+    font-size: 18px;  /* Tăng kích thước chữ */
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Bóng mờ đẹp hơn */
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1000;
+    pointer-events: none; /* Không cho phép tương tác khi ẩn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Thông báo thành công (Màu xanh) */
+.notification.success {
+    background-color: rgba(76, 175, 80, 0.8);  /* Xanh với độ trong suốt */
+}
+
+/* Thông báo thất bại (Màu đỏ) */
+.notification.error {
+    background-color: rgba(244, 67, 54, 0.8);  /* Đỏ với độ trong suốt */
+}
+
+/* Thông báo thông tin (Màu xanh dương) */
+.notification.info {
+    background-color: rgba(33, 150, 243, 0.8);  /* Xanh dương với độ trong suốt */
+}
+
+/* Thông báo cảnh báo (Màu vàng) */
+.notification.warning {
+    background-color: rgba(255, 152, 0, 0.8);  /* Vàng với độ trong suốt */
+}
+
+/* Khi hiển thị thông báo */
+.notification.show {
+    opacity: 1;
+    transform: translateY(20px);  /* Hiệu ứng di chuyển nhẹ khi xuất hiện */
+    pointer-events: auto; /* Cho phép tương tác khi hiển thị */
+}
+
+/* Thêm hiệu ứng hover cho thông báo */
+.notification:hover {
+    transform: translateY(10px);  /* Khi hover vào sẽ dịch chuyển nhẹ */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);  /* Tăng bóng mờ khi hover */
+}
+
+/* Đảm bảo khi thông báo biến mất sẽ không còn ảnh hưởng đến layout */
+.notification.hide {
+    opacity: 0;
+    transform: translateY(-50px);  /* Đưa thông báo lên ngoài màn hình */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
