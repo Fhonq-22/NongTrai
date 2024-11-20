@@ -87,13 +87,24 @@ function displayLevels() {
 
 // Hàm xóa người dùng
 window.deleteUser = function(userId) {
-    const userRef = ref(database, 'Users/' + userId); // Lấy tham chiếu đến người dùng cần xóa
-    remove(userRef).then(() => {
-        alert('Người dùng đã bị xóa!');
+    // Tham chiếu đến các bảng liên quan
+    const userRef = ref(database, 'Users/' + userId); // Bảng Users
+    const profileRef = ref(database, 'UserProfiles/' + userId); // Bảng UserProfiles
+    const landRef = ref(database, 'UserLand/' + userId); // Bảng UserLand
+
+    // Xóa dữ liệu trong từng bảng
+    Promise.all([
+        remove(userRef),      // Xóa người dùng trong bảng Users
+        remove(profileRef),   // Xóa thông tin trong UserProfiles
+        remove(landRef)       // Xóa thông tin ô đất trong UserLand
+    ])
+    .then(() => {
+        alert('Người dùng và dữ liệu liên quan đã bị xóa!');
         displayUsers(); // Cập nhật lại danh sách người dùng sau khi xóa
-    }).catch((error) => {
-        console.error("Có lỗi khi xóa người dùng: ", error);
-        alert('Có lỗi xảy ra khi xóa người dùng!');
+    })
+    .catch((error) => {
+        console.error("Có lỗi khi xóa dữ liệu: ", error);
+        alert('Có lỗi xảy ra khi xóa người dùng hoặc dữ liệu liên quan!');
     });
 };
 
@@ -141,39 +152,45 @@ window.editUserPassword = function(username) {
 }
 
 // Hàm sửa thông tin cây trồng
-window.editPlant = function(plantId) {
+window.editPlant = async function(plantId) {
     const plantRef = ref(database, 'Plants/' + plantId); // 'plantId' chính là tên cây trồng
 
-    // Lấy thông tin hiện tại của cây trồng
-    get(plantRef).then((snapshot) => {
+    try {
+        // Lấy thông tin hiện tại của cây trồng
+        const snapshot = await get(plantRef);
+
         if (snapshot.exists()) {
             const plant = snapshot.val();
-            const newGrowthTime = prompt("Sửa thời gian sinh trưởng:", plant.growthTime);
-            const newExpReward = prompt("Sửa phần thưởng kinh nghiệm:", plant.expReward);
-            const newCoinsReward = prompt("Sửa phần thưởng xu:", plant.coinsReward);
-            const newSeedCost = prompt("Sửa chi phí hạt giống:", plant.seedCost);
+
+            // Sửa thông tin từng cái một
+            const newGrowthTime = await showPopup("Sửa thời gian sinh trưởng:", plant.growthTime);
+            const newExpReward = await showPopup("Sửa phần thưởng kinh nghiệm:", plant.expReward);
+            const newCoinsReward = await showPopup("Sửa phần thưởng xu:", plant.coinsReward);
+            const newSeedCost = await showPopup("Sửa chi phí hạt giống:", plant.seedCost);
 
             // Cập nhật lại thông tin cây trồng
-            set(plantRef, {
+            await set(plantRef, {
                 growthTime: newGrowthTime ? parseInt(newGrowthTime) : plant.growthTime,
                 expReward: newExpReward ? parseInt(newExpReward) : plant.expReward,
                 coinsReward: newCoinsReward ? parseInt(newCoinsReward) : plant.coinsReward,
                 seedCost: newSeedCost ? parseInt(newSeedCost) : plant.seedCost
-            }).then(() => {
-                alert('Cây trồng đã được sửa thành công!');
-                displayPlants(); // Cập nhật lại danh sách cây trồng
-            }).catch((error) => {
-                console.error("Có lỗi khi sửa cây trồng: ", error);
-                alert('Có lỗi xảy ra khi sửa cây trồng!');
             });
+
+            alert('Cây trồng đã được sửa thành công!');
+            displayPlants(); // Cập nhật lại danh sách cây trồng
+
+        } else {
+            console.log('Không tìm thấy cây trồng với ID:', plantId);
         }
-    }).catch((error) => {
-        console.error("Có lỗi khi lấy thông tin cây trồng: ", error);
-    });
-}
+    } catch (error) {
+        console.error("Có lỗi khi sửa cây trồng: ", error);
+        alert('Có lỗi xảy ra khi sửa cây trồng!');
+    }
+};
+
 
 // Hàm sửa thông tin cấp độ
-window.editLevel = function(levelId) {
+window.editLevel = function(levelName) {
     const levelRef = ref(database, 'Levels/' + levelName);
 
     // Lấy thông tin hiện tại của cấp độ
@@ -205,14 +222,64 @@ window.editLevel = function(levelId) {
 // Thêm người dùng
 document.getElementById('addUserBtn').addEventListener('click', () => {
     const username = prompt('Nhập tên người dùng mới:');
+    
     if (username) {
-        set(ref(database, 'Users/' + username), {
-            username: username
-        }).then(() => {
-            displayUsers();
-            alert('Đã thêm người dùng!');
+        // Kiểm tra xem tên người dùng đã tồn tại chưa
+        const userRef = ref(database, 'Users/' + username);
+
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                // Nếu tên người dùng đã tồn tại, thông báo lỗi
+                alert('Tên người dùng đã tồn tại!');
+            } else {
+                // Nếu tên người dùng chưa tồn tại, thêm người dùng vào Firebase
+                set(ref(database, 'Users/' + username), {
+                    username: username
+                })
+                .then(() => {
+                    // Thêm thông tin mặc định vào bảng UserProfiles
+                    set(ref(database, 'UserProfiles/' + username), {
+                        xp: 0,                // Kinh nghiệm ban đầu
+                        level: 1,             // Cấp độ ban đầu
+                        coins: 100,           // Xu ban đầu
+                        plotsUnlocked: 1      // Số ô đất ban đầu
+                    })
+                    .then(() => {
+                        // Thêm ô đất mặc định vào UserLand
+                        set(ref(database, 'UserLand/' + username), {
+                            plots: [
+                                { 
+                                    plantId: null,           // Chưa có cây trồng
+                                    growthStatus: "empty",   // Trạng thái trống
+                                    watered: false,          // Chưa tưới nước
+                                    growthStartDate: null,   // Không có ngày sinh trưởng
+                                    harvestDate: null       // Không có ngày thu hoạch
+                                }
+                            ]
+                        })
+                        .then(() => {
+                            alert('Đã thêm người dùng thành công!');
+                            // Tải lại danh sách người dùng
+                            displayUsers();
+                        })
+                        .catch((error) => {
+                            alert(`Có lỗi xảy ra khi tạo UserLand: ${error.message}`);
+                            console.error(error);
+                        });
+                    })
+                    .catch((error) => {
+                        alert(`Có lỗi xảy ra khi tạo UserProfiles: ${error.message}`);
+                        console.error(error);
+                    });
+                })
+                .catch((error) => {
+                    alert(`Có lỗi xảy ra khi thêm người dùng: ${error.message}`);
+                    console.error(error);
+                });
+            }
         }).catch((error) => {
-            alert('Có lỗi xảy ra khi thêm người dùng: ' + error.message);
+            alert(`Có lỗi xảy ra khi kiểm tra tên người dùng: ${error.message}`);
+            console.error(error);
         });
     }
 });
@@ -270,7 +337,17 @@ document.getElementById('addLevelBtn').addEventListener('click', () => {
 
 // Hiển thị tất cả các bảng ngay khi trang được tải
 window.onload = () => {
-    displayUsers();
-    displayPlants();
-    displayLevels();
+    // Kiểm tra người dùng có đăng nhập không
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userId = localStorage.getItem('userId');
+
+    if (!isLoggedIn || userId!=="Admin") {
+        window.location.href = "login.html";  // Chuyển hướng đến trang đăng nhập nếu không đăng nhập
+        return;
+    }
+    else{
+        displayUsers();
+        displayPlants();
+        displayLevels();
+    }
 };
