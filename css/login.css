@@ -1,4 +1,3 @@
-/* login.css - Định kiểu cho trang đăng nhập */
 .container {
     width: 100%;
     max-width: 400px;
@@ -6,6 +5,10 @@
     background-color: var(--secondary-color);
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 50px auto;
+    position: relative;
+    z-index: 10;
 }
 
 form {
@@ -20,11 +23,7 @@ input {
     border-radius: 5px;
     background-color: var(--input-bg-color);
     font-size: 1em;
-}
-
-input:focus {
-    border-color: var(--input-focus-border-color);
-    outline: none;
+    color: var(--text-color);
 }
 
 button {
@@ -33,6 +32,7 @@ button {
     border: none;
     border-radius: 5px;
     font-size: 1.1em;
+    color: var(--text-color);
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -41,12 +41,105 @@ button:hover {
     background-color: var(--button-hover-bg-color);
 }
 
-button:active {
-    background-color: #2E8B57;
+#randomImageContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
 }
 
-@media (max-width: 600px) {
-    .container {
-        width: 90%;
+#randomImageContainer img {
+    position: absolute;
+    max-width: 150px; /* Cỡ ảnh lớn hơn một chút */
+    max-height: 150px;
+    opacity: 0;
+    transform: scale(0.5) rotate(15deg); /* Bắt đầu với độ xoay và thu nhỏ */
+    filter: blur(5px); /* Để ảnh mờ đi khi mới xuất hiện */
+    transition: transform 0.8s ease, opacity 1s ease, filter 1s ease;
+    animation: fadeInOut 4s ease-in-out infinite; /* Áp dụng keyframes cho hiệu ứng xuất hiện */
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg);
+        filter: blur(5px);
     }
+    40% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg); /* Ảnh phóng to và xoay về góc ban đầu */
+        filter: blur(0);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.2) rotate(-10deg); /* Ảnh sẽ phóng to và xoay một chút */
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg); /* Thu nhỏ và xoay trở lại */
+        filter: blur(5px); /* Làm mờ dần khi ảnh biến mất */
+    }
+}
+
+#randomImageContainer img:hover {
+    transform: scale(1.4) rotate(10deg); /* Phóng to ảnh khi hover và xoay nhẹ */
+    opacity: 1;
+    filter: none; /* Xoá mờ khi hover */
+}
+
+
+
+
+
+
+#randomImageContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1; /* Đảm bảo ảnh nằm dưới form */
+}
+
+#randomImageContainer img {
+    position: absolute;
+    max-width: 150px;
+    max-height: 150px;
+    opacity: 0;
+    transform: scale(0.5) rotate(15deg);
+    filter: blur(5px);
+    transition: transform 0.8s ease, opacity 1s ease, filter 1s ease;
+    animation: fadeInOut 4s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg);
+        filter: blur(5px);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+        filter: blur(0);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.2) rotate(-10deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg);
+        filter: blur(5px);
+    }
+}
+
+#randomImageContainer img:hover {
+    transform: scale(1.4) rotate(10deg);
+    opacity: 1;
+    filter: none;
 }
