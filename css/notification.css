@@ -62,3 +62,9 @@
     transform: translateY(-50px);  /* Đưa thông báo lên ngoài màn hình */
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
+
+@media (max-width: 400px) {
+    .notification{
+        left: 20px;
+    }
+}

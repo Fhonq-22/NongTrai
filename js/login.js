@@ -11,7 +11,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
     // Kiểm tra nếu tên người dùng và mật khẩu không rỗng
     if (!username || !password) {
-        alert("Vui lòng điền đầy đủ thông tin!");
+        showNotification('Vui lòng điền đầy đủ thông tin!', 'warning');
         return;
     }
 
@@ -35,10 +35,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 window.location.href = "dashboard.html";
             }
         } else {
-            alert('Tên người dùng hoặc mật khẩu không đúng!');
+            showNotification('Tên người dùng hoặc mật khẩu không đúng!', 'error');
         }
     } catch (error) {
-        alert(`Có lỗi xảy ra: ${error.message}`);
+        showNotification(`Có lỗi xảy ra: ${error.message}`, 'error');
         console.error(error);
     }
 });
@@ -85,10 +85,10 @@ function showRandomImage() {
     // Thêm ảnh vào container
     container.appendChild(img);
 
-    // Xóa ảnh sau 4 giây với hiệu ứng
+    // Xóa ảnh sau 5 giây với hiệu ứng
     setTimeout(() => {
         img.remove(); // Xóa ảnh khi nó hoàn thành hiệu ứng
-    }, 4000); // Chờ 4 giây
+    }, 5000); // Chờ 5 giây
 }
 
 // Hiển thị ảnh mới mỗi giây

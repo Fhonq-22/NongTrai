@@ -1,15 +1,15 @@
 /* root.css - Các biến màu sắc và cài đặt cơ bản */
 :root {
-    --primary-color: #7FBCE9; /* Màu xanh pastel đậm hơn */
-    --secondary-color: #E7A497; /* Màu hồng đào đậm hơn */
-    --accent-color: #FFC374; /* Màu vàng kem đậm hơn */
-    --background-color: #D9F0E5; /* Màu nền xanh lá cây pastel đậm hơn */
-    --text-color: #364A63; /* Màu xám xanh đậm hơn */
-    --button-bg-color: #A4C88A; /* Màu xanh lá cây nhạt đậm hơn */
-    --button-hover-bg-color: #8BB374; /* Màu xanh lá cây đậm hơn khi hover */
-    --input-bg-color: #F8F9FA; /* Màu nền trắng hơi ngà */
-    --input-border-color: #A3B8B3; /* Màu viền input đậm hơn */
-    --input-focus-border-color: #5C8A5A; /* Màu viền khi input được focus đậm hơn */
+    --primary-color: #6EC1E4; /* Màu xanh pastel nhẹ, giống màu bầu trời trong */
+    --secondary-color: #FFB6C1; /* Màu hồng pastel nhẹ, dễ thương */
+    --accent-color: #FFD700; /* Màu vàng pastel ấm áp, tượng trưng cho ánh nắng */
+    --background-color: #FAFAD2; /* Màu vàng nhạt pastel, nhẹ nhàng và dễ chịu */
+    --text-color: #2F4F4F; /* Màu xám xanh đậm, dễ đọc và hài hòa với pastel */
+    --button-bg-color: #98FB98; /* Màu xanh lá cây pastel, tươi sáng và gần gũi */
+    --button-hover-bg-color: #66CDAA; /* Màu xanh lá cây đậm hơn khi hover */
+    --input-bg-color: #FFFFFF; /* Màu nền trắng sáng cho input */
+    --input-border-color: #D3D3D3; /* Màu viền input nhẹ nhàng */
+    --input-focus-border-color: #20B2AA; /* Màu viền khi focus, tươi mát và dễ nhìn */
 }
 
 /* Định nghĩa font chữ toàn trang */
@@ -26,7 +26,7 @@ body {
 }
 
 h2 {
-    color: var(--primary-color);
+    color: var(--primary-color); /* Tiêu đề màu xanh pastel tươi sáng */
     font-size: 2em;
     text-align: center;
     margin-bottom: 20px;

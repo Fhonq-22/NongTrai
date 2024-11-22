@@ -1,4 +1,4 @@
-/* register.css - Định kiểu cho trang đăng ký */
+/* Định dạng container */
 .container {
     width: 100%;
     max-width: 400px;
@@ -6,33 +6,52 @@
     background-color: var(--secondary-color);
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 50px auto;
+    position: relative;
+    z-index: 10;
 }
 
+/* Định dạng form */
 form {
     display: flex;
     flex-direction: column;
 }
 
-input {
+/* Định dạng input */
+.input-container {
+    position: relative;
     margin-bottom: 15px;
+}
+
+.input-container i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+    color: var(--text-color);
+    pointer-events: none; /* Không cho phép tương tác với icon */
+}
+
+input {
+    padding-left: 40px; /* Tạo khoảng cách cho icon */
     padding: 10px;
     border: 1px solid var(--input-border-color);
     border-radius: 5px;
     background-color: var(--input-bg-color);
     font-size: 1em;
+    color: var(--text-color);
 }
 
-input:focus {
-    border-color: var(--input-focus-border-color);
-    outline: none;
-}
-
+/* Định dạng nút đăng ký */
 button {
     padding: 12px;
     background-color: var(--button-bg-color);
     border: none;
     border-radius: 5px;
     font-size: 1.1em;
+    color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -41,12 +60,67 @@ button:hover {
     background-color: var(--button-hover-bg-color);
 }
 
-button:active {
-    background-color: #2E8B57;
+/* Định dạng đường dẫn chuyển sang trang đăng nhập */
+p {
+    font-size: 1em;
+    color: var(--text-color);
 }
 
-@media (max-width: 600px) {
-    .container {
-        width: 90%;
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Khu vực hiển thị ảnh ngẫu nhiên */
+#randomImageContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1; /* Đảm bảo ảnh nằm dưới form */
+}
+
+#randomImageContainer img {
+    position: absolute;
+    max-width: 150px;
+    max-height: 150px;
+    opacity: 0;
+    transform: scale(0.5) rotate(15deg);
+    filter: blur(5px);
+    transition: transform 0.8s ease, opacity 1s ease, filter 1s ease;
+    animation: fadeInOut 4s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg);
+        filter: blur(5px);
     }
+    40% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+        filter: blur(0);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.2) rotate(-10deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg);
+        filter: blur(5px);
+    }
+}
+
+#randomImageContainer img:hover {
+    transform: scale(1.4) rotate(10deg);
+    opacity: 1;
+    filter: none;
 }

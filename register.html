@@ -5,18 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký Nông trại</title>
+    <link rel="stylesheet" href="css/notification.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/register.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <h2>Đăng ký Tài khoản Nông trại</h2>
         <form id="registerForm">
-            <input type="text" id="username" placeholder="Tên người dùng" required>
-            <input type="password" id="password" placeholder="Mật khẩu" required>
+            <!-- Tên người dùng -->
+            <div class="input-container">
+                <i class="material-icons">account_circle</i>
+                <input type="text" id="username" placeholder="Tên người dùng" required>
+            </div>
+            <!-- Mật khẩu -->
+            <div class="input-container">
+                <i class="material-icons">lock</i>
+                <input type="password" id="password" placeholder="Mật khẩu" required>
+            </div>
             <button type="submit">Đăng ký</button>
         </form>
+        <p>Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a></p>
+
+        <div id="notification-container"></div>
     </div>
+    <div id="randomImageContainer"></div> <!-- Khu vực hiển thị ảnh -->
+    <script src="js/notification.js"></script>
     <script type="module" src="js/register.js"></script>
 </body>
 </html>
