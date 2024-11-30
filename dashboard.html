@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
-
 </head>
 <body>
     <div class="container">
         <h2>Nông trại</h2>
 
+        <!-- Thông tin người dùng -->
         <section id="userInfo">
             <div class="user-details">
                 <!-- Hiển thị username và level (counter icons) cùng một dòng -->
@@ -37,11 +37,19 @@
             </div>
         </section>
 
+        <!-- Các ô đất -->
         <section id="farmPlots">
             <div class="plots-container">
                 <!-- Các ô đất sẽ được thêm động tại đây -->
             </div>
-        </section>        
+        </section>
+
+        <!-- Cửa sổ cửa hàng (ẩn ban đầu) -->
+        <div id="shop-container" style="display: none;">
+            <h2>Mua hạt giống</h2>
+            <div id="plant-list"></div> <!-- Danh sách các loại hạt giống sẽ hiển thị ở đây -->
+            <button onclick="closeShop()">Đóng</button>
+        </div>
     </div>
 
     <script type="module" src="js/dashboard.js"></script>

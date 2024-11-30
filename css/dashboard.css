@@ -6,15 +6,16 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     width: 90%;
+    margin: 0 auto; /* Đảm bảo container luôn ở giữa màn hình */
 }
 
 /* Phần thông tin người dùng */
 #userInfo {
     padding: 10px;
-    border: 2px solid #4CAF50; /* Màu viền sáng và dễ nhìn */
+    border: 2px solid var(--primary-color); /* Màu viền sử dụng biến màu chính */
     border-radius: 10px;
     margin-bottom: 20px;
-    background-color: #f4f4f9; /* Nền sáng để làm nổi bật thông tin */
+    background-color: var(--input-bg-color); /* Màu nền input */
     text-align: left;
     width: fit-content;
     margin-left: 0;
@@ -23,7 +24,7 @@
 
 #userInfo h3 {
     margin-bottom: 10px; /* Giảm khoảng cách giữa tiêu đề và các dòng bên dưới */
-    color: #333; /* Màu chữ tối để dễ đọc */
+    color: var(--text-color); /* Màu chữ tối để dễ đọc */
 }
 
 .user-details {
@@ -37,13 +38,13 @@
     align-items: center;
     margin-bottom: 5px; /* Giảm khoảng cách giữa các dòng */
     font-size: 14px;
-    color: #333; /* Chữ tối để dễ đọc */
+    color: var(--text-color); /* Chữ tối để dễ đọc */
 }
 
 /* Đảm bảo các icon và giá trị có một khoảng cách hợp lý */
 .detail i, .detail span {
     font-size: 24px;  /* Giảm kích thước icon */
-    color: #4CAF50;  /* Màu xanh lá cho icon */
+    color: var(--primary-color);  /* Màu xanh pastel cho icon */
     margin-right: 8px;  /* Giảm khoảng cách giữa icon và giá trị */
 }
 
@@ -63,13 +64,13 @@
 #level span {
     font-size: 20px;  /* Giảm kích thước icon level */
     margin-right: 5px;
-    color: #FFC107;  /* Màu vàng cho icon level */
+    color: var(--accent-color);  /* Màu vàng pastel cho icon level */
 }
 
 /* Các icon xp và xu */
 .material-symbols-outlined, .material-icons {
     font-size: 24px; /* Giảm kích thước của icon */
-    color: #FF9800;  /* Màu cam cho icon xp/xu */
+    color: var(--button-bg-color);  /* Màu cam cho icon xp/xu */
     margin-right: 8px;  /* Khoảng cách giữa icon và giá trị */
 }
 
@@ -77,7 +78,7 @@
 .value {
     font-size: 16px;
     font-weight: bold;
-    color: #333; /* Màu chữ tối để dễ đọc */
+    color: var(--text-color); /* Màu chữ tối để dễ đọc */
 }
 
 /* Ô đất */
@@ -101,21 +102,21 @@
     align-items: center;  /* Căn giữa theo chiều dọc */
     font-size: 24px;
     border-radius: 8px;
-    border: 2px solid var(--input-border-color);
+    border: 2px solid var(--input-border-color); /* Sử dụng biến cho màu viền */
     transition: all 0.3s ease;
-    background: var(--button-bg-color);
+    background: var(--button-bg-color); /* Màu nền của ô đất */
     color: var(--text-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Các trạng thái của ô đất */
 .plot.unlocked:hover {
-    background-color: var(--button-hover-bg-color);
+    background-color: var(--button-hover-bg-color); /* Màu nền khi hover */
     cursor: pointer;
 }
 
 .plot.locked {
-    background: linear-gradient(to bottom, var(--background-color), var(--accent-color));
+    background: linear-gradient(to bottom, var(--background-color), var(--accent-color)); /* Sử dụng gradient từ các biến */
     cursor: not-allowed;
     opacity: 0.6;
 }
@@ -123,5 +124,52 @@
 /* Biểu tượng trong ô đất */
 .plot i, .plot span.material-symbols-outlined {
     font-size: 36px;  /* Điều chỉnh kích thước icon */
-    color: var(--text-color);
+    color: var(--text-color); /* Màu chữ trong ô đất */
 }
+
+/* Cửa sổ cửa hàng */
+#shop-container {
+    position: fixed;
+    top: 50%; /* Căn giữa theo chiều dọc */
+    left: 50%; /* Căn giữa theo chiều ngang */
+    transform: translate(-50%, -50%); /* Dịch chuyển cửa sổ về giữa màn hình */
+    background-color: rgba(255, 255, 255, 0.9); /* Nền mờ cho cửa sổ */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 500px; /* Đặt kích thước tối đa */
+    z-index: 1000; /* Đảm bảo cửa sổ được hiển thị trên các yếu tố khác */
+}
+
+#shop-container h2 {
+    text-align: center; /* Căn giữa tiêu đề */
+    color: var(--primary-color); /* Màu sắc tùy chỉnh */
+    font-size: 24px;
+}
+
+#plant-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto; /* Cho phép cuộn nếu danh sách dài */
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color); /* Thay đổi màu khi hover */
+}
+
