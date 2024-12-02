@@ -95,6 +95,7 @@
 }
 
 .plot {
+    position: relative;
     width: 100%;  /* Lấy chiều rộng 100% của cột */
     aspect-ratio: 1;  /* Đảm bảo các ô có tỷ lệ 1:1 (vuông) */
     display: flex;
@@ -108,6 +109,22 @@
     color: var(--text-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.time-remaining {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    display: none; /* Ẩn đi ban đầu */
+}
+
+.plot.unlocked .time-remaining {
+    display: block; /* Hiển thị khi ô đất đã mở */
+}
+
 
 /* Các trạng thái của ô đất */
 .plot.unlocked:hover {
@@ -125,6 +142,13 @@
 .plot i, .plot span.material-symbols-outlined {
     font-size: 36px;  /* Điều chỉnh kích thước icon */
     color: var(--text-color); /* Màu chữ trong ô đất */
+}
+
+/* Đảm bảo hình ảnh cây được căn chỉnh và không vượt ra ngoài ô đất */
+.plot img {
+    max-width: 80%; /* Đảm bảo hình ảnh không vượt quá kích thước của ô đất */
+    max-height: 80%; /* Giới hạn chiều cao để hình ảnh không bị kéo dài quá mức */
+    object-fit: contain; /* Giữ tỷ lệ hình ảnh */
 }
 
 /* Cửa sổ cửa hàng */
