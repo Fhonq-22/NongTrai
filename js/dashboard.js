@@ -23,14 +23,15 @@ window.onload = async function () {
             displayData('UserProfiles/'+userId, 'xp', 'xp');
             displayData('UserProfiles/'+userId, 'coins', 'coins');
 
+            showNotification('Đăng nhập thành công!', 'succes');
             // Hiển thị các ô đất của người dùng, truyền userId vào hàm displayFarmPlots
             displayFarmPlots(userData.level || 1, userId); // Truyền userId vào đây
         } else {
-            alert("Không tìm thấy dữ liệu người dùng!");
+            showNotification('Không tìm thấy dữ liệu người dùng!', 'warning');
         }
     } catch (error) {
         console.error("Có lỗi xảy ra:", error);
-        alert("Không thể tải thông tin người dùng.");
+        showNotification('Không thể tải thông tin người dùng!', 'error');
     }
 };
 
@@ -89,10 +90,10 @@ async function displayFarmPlots(level, userId) {
                             // Cập nhật thời gian liên tục mỗi giây
                             const updateTimeRemaining = async () => {
                                 const remainingTime = await calculateRemainingTime(plotData.plantId ,plotData.growthStartDate, plotData.harvestDate);
-                                timeRemainingDiv.innerHTML = `Thời gian còn lại: ${remainingTime}`;
+                                timeRemainingDiv.innerHTML = `[${remainingTime}]`;
 
                                 // Nếu thời gian còn lại bằng 0, tạo nút thu hoạch
-                                if (remainingTime === "Cây đã thu hoạch" && !plot.querySelector('.harvest-button')) {
+                                if (remainingTime === "Đợi thu hoạch" && !plot.querySelector('.harvest-button')) {
                                     const harvestButton = document.createElement('button');
                                     harvestButton.classList.add('harvest-button');
                                     harvestButton.innerText = 'Thu hoạch';
@@ -133,60 +134,19 @@ async function displayFarmPlots(level, userId) {
                 plotsContainer.appendChild(plot);
             }
         } else {
-            console.error("Không có dữ liệu về các ô đất.");
+            showNotification('Không có dữ liệu về các ô đất!', 'error');
         }
     } catch (error) {
-        console.error("Có lỗi xảy ra khi tải thông tin ô đất:", error);
+        showNotification('Có lỗi xảy ra khi tải thông tin ô đất:'+error, 'error');
     }
 }
 
-// Hàm thu hoạch cây trồng
-async function harvestCrop(plotId, plantName) {
-    const userId = 'User001'; // Thay bằng ID người dùng thực tế
-    try {
-        // Lấy thông tin người dùng từ Firebase thông qua hàm getData
-        const userData = await getData(`UserProfiles/${userId}`);
-
-        if (userData) {
-            const currentCoins = userData.coins || 0; // Đảm bảo giá trị 'coins' không phải NaN
-
-            // Kiểm tra xem giá trị coins có hợp lệ không
-            if (isNaN(currentCoins)) {
-                console.error("Giá trị coins không hợp lệ:", currentCoins);
-                return; // Không tiếp tục nếu coins không hợp lệ
-            }
-
-            // Giả sử bạn thu hoạch cây và cộng thêm coins
-            const harvestReward = 10; // Phần thưởng thu hoạch
-            const newCoins = currentCoins + harvestReward;
-
-            // Cập nhật thông tin người dùng (bao gồm coins) vào Firebase
-            await updateData(`UserProfiles/${userId}`, { coins: newCoins });
-
-            // Cập nhật trạng thái của ô đất sau khi thu hoạch
-            await updateData(`UserLand/${userId}/plots/${plotId}`, {
-                growthStatus: 'harvested',
-                harvestDate: new Date().toISOString()
-            });
-
-            console.log(`Thu hoạch thành công! Bạn đã nhận ${harvestReward} coins. Tổng số coins: ${newCoins}`);
-
-            // Cập nhật dữ liệu XP và coins hiển thị
-            displayData('UserProfiles/'+userId, 'xp', 'xp');
-            displayData('UserProfiles/'+userId, 'coins', 'coins');
-        } else {
-            console.error("Không tìm thấy dữ liệu người dùng.");
-        }
-    } catch (error) {
-        console.error("Có lỗi khi thu hoạch cây:", error);
-    }
-}
 
 // Hàm tính toán thời gian còn lại của cây trồng
 async function calculateRemainingTime(plantId, growthStartDate, harvestDate) {
     const currentTime = Date.now(); // Lấy thời gian hiện tại
     let remainingTime = 0;
-
+    
     // Nếu chưa có ngày thu hoạch, tính toán từ thời gian bắt đầu trồng
     if (!harvestDate) {
         const plantData = await getData(`Plants/${plantId}`); // Lấy thông tin cây trồng từ Firebase
@@ -194,7 +154,7 @@ async function calculateRemainingTime(plantId, growthStartDate, harvestDate) {
             const growthTime = plantData.growthTime * 60 * 60 * 1000; // Chuyển thời gian phát triển từ giờ sang mili giây
             remainingTime = growthTime - (currentTime - growthStartDate); // Tính thời gian còn lại
         } else {
-            console.error("Cây trồng không tồn tại trong cơ sở dữ liệu");
+            showNotification('Cây trồng không tồn tại trong cơ sở dữ liệu!', 'warning');
             return "Cây không hợp lệ"; // Nếu cây không tồn tại
         }
     }
@@ -208,9 +168,8 @@ async function calculateRemainingTime(plantId, growthStartDate, harvestDate) {
     const hours = Math.floor(remainingTime / (1000 * 60 * 60)); // Giờ
     const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60)); // Phút
     const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000); // Giây
-
-    // Trả về thời gian còn lại theo định dạng xxh xxm xx s
-    return `${hours}h ${minutes}m ${seconds}s`;
+    
+    return `${hours}:${minutes}:${seconds}`;
 }
 
 // Hàm mở cửa hàng để người dùng mua hạt giống
@@ -238,7 +197,7 @@ async function openShop(plotId) {
                     <p>Thời gian phát triển: ${plant.growthTime} giờ</p>
                     <p>Phần thưởng: ${plant.expReward} EXP, ${plant.coinsReward} xu</p>
                     <button onclick="buySeed('${plantName}', ${plant.seedCost}, ${plotId})">Mua hạt giống</button>
-                `;
+                    `;
                 plantList.appendChild(plantItem);
             }
 
@@ -246,11 +205,11 @@ async function openShop(plotId) {
             const closeShopbtn = document.getElementById('close-shop');
             closeShopbtn.onclick = closeShop;
         } else {
-            alert("Không có dữ liệu cây trồng.");
+            showNotification('Không có dữ liệu cây trồng!', 'warning');
         }
     } catch (error) {
         console.error("Có lỗi xảy ra khi tải dữ liệu cây trồng:", error);
-        alert("Có lỗi xảy ra khi tải dữ liệu cây trồng.");
+        showNotification('Có lỗi xảy ra khi tải dữ liệu cây trồng!', 'error');
     }
 }
 
@@ -262,14 +221,7 @@ function closeShop() {
 
 // Hàm mua hạt giống
 window.buySeed = async function(plantName, seedCost, plotId) {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userId = localStorage.getItem('userId');
-
-    // Kiểm tra nếu người dùng chưa đăng nhập
-    if (!isLoggedIn || !userId) {
-        alert("Bạn cần đăng nhập để mua hạt giống.");
-        return;
-    }
 
     try {
         // Lấy dữ liệu người dùng từ Firebase (UserProfiles)
@@ -277,19 +229,19 @@ window.buySeed = async function(plantName, seedCost, plotId) {
         
         if (userData) {
             const currentCoins = userData.coins || 0;
-
+            
             // Kiểm tra nếu người dùng có đủ xu để mua hạt giống
             if (currentCoins >= seedCost) {
                 // Trừ xu và cập nhật dữ liệu
                 const newCoins = currentCoins - seedCost;
-
+                
                 // Cập nhật thông tin ô đất vào UserLand
                 const plotData = {
                     growthStatus: 'growing',
                     growthStartDate: Date.now(),
                     plantId: plantName
                 };
-
+                
                 // Cập nhật
                 await updateData(`UserLand/${userId}/plots/${plotId}`, plotData);
                 await updateData(`UserProfiles/${userId}`, { coins: newCoins });
@@ -297,20 +249,65 @@ window.buySeed = async function(plantName, seedCost, plotId) {
                 displayData('UserProfiles/'+userId, 'coins', 'coins');
 
                 // Thông báo thành công
-                alert(`Mua hạt giống ${plantName} thành công!`);
+                showNotification(`Mua hạt giống ${plantName} thành công!`, 'succes');
 
                 // Đóng cửa hàng
                 closeShop();
-
+                
                 // Cập nhật lại giao diện ô đất (có thể là một hàm khác)
                 displayFarmPlots(userData.level, userId);
             } else {
-                alert("Bạn không đủ xu để mua hạt giống.");
+                showNotification('Bạn không đủ xu để mua hạt giống', 'warning');
             }
         } else {
-            alert("Không tìm thấy thông tin người dùng.");
+            showNotification('Không tìm thấy thông tin người dùng', 'warning');
         }
     } catch (error) {
-        console.error("Có lỗi xảy ra khi mua hạt giống:", error);
+        showNotification('Có lỗi xảy ra khi mua hạt giống: '+error, 'error');
     }
 };
+
+// Hàm thu hoạch cây trồng
+async function harvestCrop(plotId, plantId) {
+    const userId = localStorage.getItem('userId');
+    try {
+        // Lấy thông tin người dùng từ Firebase thông qua hàm getData
+        const userData = await getData(`UserProfiles/${userId}`);
+
+        if (userData) {
+            const currentCoins = userData.coins || 0; // Đảm bảo giá trị 'coins' không phải NaN
+            const currentXp = userData.xp || 0;
+
+            // Kiểm tra xem giá trị coins có hợp lệ không
+            if (isNaN(currentCoins)) {    
+                showNotification('Giá trị coins không hợp lệ: ' + currentCoins, 'error');
+                return; // Không tiếp tục nếu coins không hợp lệ
+            }
+
+            const plantData = await getData('Plants/'+PlantId);
+            const newCoins = currentCoins;
+            const newXp = currentXp;
+            if(plantData){
+                newCoins = currentCoins + plantData.coinsReward;
+                newXp = currentXp + plantData.expReward; 
+                showNotification(`Thu hoạch thành công! Nhận ${plantData.coinsReward} coins và ${plantData.expReward}`, 'succes');
+            }
+
+            // Cập nhật thông tin người dùng (bao gồm coins) vào Firebase
+            await updateData(`UserProfiles/${userId}`, { coins: newCoins,  xp: newXp});
+            displayData('UserProfiles/'+userId, 'xp', 'xp');
+            displayData('UserProfiles/'+userId, 'coins', 'coins');
+
+            // Cập nhật trạng thái của ô đất sau khi thu hoạch
+            await updateData(`UserLand/${userId}/plots/${plotId}`, {
+                growthStatus: 'harvested',
+                harvestDate: new Date().toISOString()
+            });
+            
+        } else {
+            showNotification('Không tìm thấy dữ liệu người dùng!', 'warning');
+        }
+    } catch (error) {
+        showNotification('Có lỗi khi thu hoạch cây: '+error, 'error');
+    }
+}
