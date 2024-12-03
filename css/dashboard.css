@@ -81,6 +81,101 @@
     color: var(--text-color); /* Màu chữ tối để dễ đọc */
 }
 
+/* Section vòng quay may mắn */
+#spinWheelSection {
+    /* margin: 20px 0; */
+    text-align: center;
+    /* padding: 20px; */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+    display: inline-block;
+}
+
+/* Cửa sổ vòng quay (hiển thị ở trên cùng) */
+#spin-wheel-container {
+    position: fixed; /* Hiển thị cố định trên màn hình */
+    top: 50%; /* Canh giữa màn hình */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Hiển thị phía trên tất cả các thành phần khác */
+    margin: 0 auto;
+    padding: 20px;
+    width: 300px; /* Độ rộng */
+    background: white; /* Nền trắng để phân biệt */
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none; /* Mặc định ẩn */
+    text-align: center;
+}
+
+#spin-wheel-container h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#wheel {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 5px solid #ddd;
+    background: conic-gradient(
+        red 0deg 60deg,
+        yellow 60deg 120deg,
+        green 120deg 180deg,
+        blue 180deg 240deg,
+        orange 240deg 300deg,
+        pink 300deg 360deg
+    );
+    margin: 20px auto;
+}
+
+#spin-wheel-container img#pointer {
+    width: 20%;
+    position: absolute;
+    top: 40%; /* Canh giữa màn hình */
+    left: 50%;
+    transform: translate(-50%, -40%);
+}
+
+#spin-button, #close-wheel, .spin-wheel-button {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: #4CAF50;
+    color: white;
+    transition: background 0.3s;
+}
+
+button#close-wheel {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#spin-button:hover, #close-wheel:hover, .spin-wheel-button:hover {
+    background: #45a049;
+}
+
+
+/* Vùng đen che mờ nền khi vòng quay hiển thị */
+#spin-wheel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Nền tối mờ */
+    z-index: 999; /* Phía dưới vòng quay nhưng trên các phần khác */
+    display: none; /* Mặc định ẩn */
+}
+
+
 /* Ô đất */
 #farmPlots {
     text-align: center;
@@ -132,7 +227,7 @@
 
 .plot {
     position: relative;
-    z-index: 1000;
+    z-index: 998;
     overflow: visible;
 }
 

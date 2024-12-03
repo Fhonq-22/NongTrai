@@ -231,3 +231,61 @@ async function harvestCrop(plotId, plantId) {
         showNotification('Lỗi khi thu hoạch!', 'error');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const spinWheelContainer = document.getElementById('spin-wheel-container');
+    const spinWheelOverlay = document.getElementById('spin-wheel-overlay');
+    const spinButton = document.getElementById('spin-button');
+    const closeWheelButton = document.getElementById('close-wheel');
+    const spinWheelButton = document.getElementById('spin-wheel-button');
+    const wheel = document.getElementById('wheel');
+
+    // Hiển thị vòng quay và overlay
+    spinWheelButton.onclick = () => {
+        spinWheelContainer.style.display = 'block';
+        spinWheelOverlay.style.display = 'block';
+    };
+
+    // Đóng vòng quay và overlay
+    closeWheelButton.onclick = () => {
+        spinWheelContainer.style.display = 'none';
+        spinWheelOverlay.style.display = 'none';
+    };
+
+    // Xử lý quay vòng
+    spinButton.onclick = async () => {
+        const userId = localStorage.getItem('userId');
+        let userData = await getData(`UserProfiles/${userId}`);
+        await updateData(`UserProfiles/${userId}`, { 
+            coins: (userData.coins || 0) - 10
+        });
+        displayData(`UserProfiles/${userId}`, 'coins', 'coins');
+
+        const randomDegree = Math.floor(Math.random() * 360) + 1; // Ngẫu nhiên góc quay
+        const soVong = Math.floor(Math.random() * 22*2) + 1;
+        wheel.style.transition = 'transform 5s ease-out';
+        wheel.style.transform = `rotate(${360*soVong + randomDegree}deg)`; // Quay nhiều vòng + góc ngẫu nhiên
+
+        // Hiển thị thông báo sau khi dừng
+        setTimeout(async () => {
+            const normalizedDegree = (3600 + randomDegree) % 360;
+            const prize = getPrize(normalizedDegree);
+            showNotification(`Chúc mừng! Bạn nhận được: ${prize} xu`, 'succes');
+            userData = await getData(`UserProfiles/${userId}`);
+            await updateData(`UserProfiles/${userId}`, { 
+                coins: (userData.coins || 0) + prize
+            });
+            displayData(`UserProfiles/${userId}`, 'coins', 'coins');
+        }, 5000); // Trùng với thời gian quay        
+    };
+
+    // Hàm tính giải thưởng dựa trên góc quay
+    function getPrize(degree) {
+        if (degree >= 0 && degree < 60) return 10;
+        if (degree >= 60 && degree < 120) return 12;
+        if (degree >= 120 && degree < 180) return 5;
+        if (degree >= 180 && degree < 240) return 1;
+        if (degree >= 240 && degree < 300) return 22;
+        return 50;
+    }
+});
