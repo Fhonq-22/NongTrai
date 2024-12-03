@@ -101,20 +101,25 @@ function renderGrowingPlot(plot, plotData, index, userId) {
     plot.onclick = () => (timeDiv.style.display = 'block');
 }
 
-function renderReadyToHarvestPlot(plot, index, plantId) {
-    plot.innerHTML = `<i class="material-icons">spa</i>`;
+async function renderReadyToHarvestPlot(plot, index, plantId) {
+    const img = document.createElement('img');
+    const plantData = await getData("Plants/"+plantId);
+    img.src = plantData.imgLink || 'img/Cay-truong-thanh.png';
+    plot.append(img);
     const button = document.createElement('button');
     button.className = 'harvest-button';
-    button.textContent = 'Thu hoạch';
+    button.innerHTML = '<i class="material-icons">spa</i>';
     button.onclick = () => harvestCrop(index, plantId);
     plot.append(button);
 }
 
 async function renderHarvestedPlot(plot, index, userId) {
-    plot.innerHTML = `<i class="material-icons">delete</i>`;
+    const img = document.createElement('img');
+    img.src = 'img/Cay-heo.png'; 
+    plot.append(img);
     const button = document.createElement('button');
     button.className = 'shovel-button';
-    button.innerHTML = `<i class="material-icons">construction</i> Làm sạch`;
+    button.innerHTML = `<i class="material-icons">delete</i>`;
     button.onclick = async () => {
         try {
             await updateData(`UserLand/${userId}/plots/${index}`, {

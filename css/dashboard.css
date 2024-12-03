@@ -71,7 +71,7 @@
 .material-symbols-outlined, .material-icons {
     font-size: 24px; /* Giảm kích thước của icon */
     color: var(--button-bg-color);  /* Màu cam cho icon xp/xu */
-    margin-right: 8px;  /* Khoảng cách giữa icon và giá trị */
+    /* margin-right: 8px;  Khoảng cách giữa icon và giá trị */
 }
 
 /* Căn chỉnh các dòng theo đúng layout */
@@ -109,6 +109,37 @@
     color: var(--text-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.plot button {
+    position: absolute;
+    z-index: 2000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: none;
+}
+
+.plot button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.plot {
+    position: relative;
+    z-index: 1000;
+    overflow: visible;
+}
+
+.plot:hover button {
+    display: block;
+}
+
 
 .time-remaining {
     position: absolute;
@@ -182,7 +213,7 @@
 
 button {
     display: block;
-    width: 100%;
+    /* width: 100%; */
     padding: 10px;
     background-color: var(--primary-color);
     color: white;
@@ -190,7 +221,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 button:hover {
