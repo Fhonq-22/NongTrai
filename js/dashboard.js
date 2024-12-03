@@ -252,6 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         spinWheelOverlay.style.display = 'none';
     };
 
+    const ranges = ["0-59", "60-119", "120-179", "180-239", "240-299", "300-359"];
+    const weights = [65-12, 65-5, 65-15, 65-22, 65-10, 65-1];
     // Xử lý quay vòng
     spinButton.onclick = async () => {
         const userId = localStorage.getItem('userId');
@@ -261,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         displayData(`UserProfiles/${userId}`, 'coins', 'coins');
 
-        const randomDegree = Math.floor(Math.random() * 360) + 1; // Ngẫu nhiên góc quay
+        const randomDegree = getRandomFromRanges(ranges, weights);
         const soVong = Math.floor(Math.random() * 22*2) + 1;
         wheel.style.transition = 'transform 5s ease-out';
         wheel.style.transform = `rotate(${360*soVong + randomDegree}deg)`; // Quay nhiều vòng + góc ngẫu nhiên
@@ -281,11 +283,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hàm tính giải thưởng dựa trên góc quay
     function getPrize(degree) {
-        if (degree >= 0 && degree < 60) return 10;
-        if (degree >= 60 && degree < 120) return 12;
-        if (degree >= 120 && degree < 180) return 5;
-        if (degree >= 180 && degree < 240) return 1;
-        if (degree >= 240 && degree < 300) return 22;
-        return 50;
+        if (degree >= 0 && degree < 60) return 12;
+        if (degree >= 60 && degree < 120) return 5;
+        if (degree >= 120 && degree < 180) return 15;
+        if (degree >= 180 && degree < 240) return 22;
+        if (degree >= 240 && degree < 300) return 10;
+        return 1;
     }
+
+    function getRandomFromRanges(ranges, weights) {
+        if (ranges.length !== weights.length) {
+            throw new Error("Hai mảng ranges và weights phải có cùng số phần tử.");
+        }
+
+        const expandedRanges = ranges.flatMap((range, index) =>
+            Array(weights[index]).fill(range)
+        );
+
+        if (expandedRanges.length === 0) {
+            throw new Error("Không có khoảng giá trị nào để chọn.");
+        }
+
+        const [min, max] = expandedRanges[
+            Math.floor(Math.random() * expandedRanges.length)
+        ]
+            .split('-')
+            .map(Number);
+
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
 });
