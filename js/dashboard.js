@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const ranges = ["0-59", "60-119", "120-179", "180-239", "240-299", "300-359"];
-    const weights = [65-12, 65-5, 65-15, 65-22, 65-10, 65-1];
+    const weights = [100-12, 100-5, 100-22, 100-50, 100-10, 100-1];
     // Xử lý quay vòng
     spinButton.onclick = async () => {
         const userId = localStorage.getItem('userId');
@@ -285,8 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function getPrize(degree) {
         if (degree >= 0 && degree < 60) return 12;
         if (degree >= 60 && degree < 120) return 5;
-        if (degree >= 120 && degree < 180) return 15;
-        if (degree >= 180 && degree < 240) return 22;
+        if (degree >= 120 && degree < 180) return 22;
+        if (degree >= 180 && degree < 240) return 50;
         if (degree >= 240 && degree < 300) return 10;
         return 1;
     }
