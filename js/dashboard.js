@@ -253,13 +253,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const ranges = ["0-59", "60-119", "120-179", "180-239", "240-299", "300-359"];
-    const weights = [100-12, 100-5, 100-22, 100-50, 100-10, 100-1];
+    const weights = [12, 22, 22, 22, 2, 20];
     // Xử lý quay vòng
     spinButton.onclick = async () => {
         const userId = localStorage.getItem('userId');
         let userData = await getData(`UserProfiles/${userId}`);
         await updateData(`UserProfiles/${userId}`, { 
-            coins: (userData.coins || 0) - 10
+            coins: (userData.coins || 0) - 20
         });
         displayData(`UserProfiles/${userId}`, 'coins', 'coins');
 
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(async () => {
             const normalizedDegree = (3600 + randomDegree) % 360;
             const prize = getPrize(normalizedDegree);
-            showNotification(`Chúc mừng! Bạn nhận được: ${prize} xu`, 'succes');
+            showNotification(`Chúc mừng! Bạn nhận được: ${prize} xu`, 'info');
             userData = await getData(`UserProfiles/${userId}`);
             await updateData(`UserProfiles/${userId}`, { 
                 coins: (userData.coins || 0) + prize
@@ -283,11 +283,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hàm tính giải thưởng dựa trên góc quay
     function getPrize(degree) {
-        if (degree >= 0 && degree < 60) return 12;
+        if (degree >= 0 && degree < 60) return 32;
         if (degree >= 60 && degree < 120) return 5;
-        if (degree >= 120 && degree < 180) return 22;
-        if (degree >= 180 && degree < 240) return 50;
-        if (degree >= 240 && degree < 300) return 10;
+        if (degree >= 120 && degree < 180) return 20;
+        if (degree >= 180 && degree < 240) return 12;
+        if (degree >= 240 && degree < 300) return 200;
         return 1;
     }
 
